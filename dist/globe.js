@@ -10,15 +10,15 @@ const land=[
  [[-8,50],[-6,58],[0,59],[2,52],[-8,50]],[[130,31],[141,45],[145,43],[138,33],[130,31]],[[166,-34],[178,-40],[168,-46],[166,-34]],[[47,-13],[50,-17],[47,-25],[44,-22],[47,-13]]
 ];
 export class Globe {
- constructor(canvas,onSelect){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.rotation=30;this.tilt=20;this.zoom=1;this.points=[];this.onSelect=onSelect;this.selected='';this.hit=[];this.drag=null;
+ constructor(canvas,onSelect){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.rotation=30;this.tilt=0;this.zoom=1;this.points=[];this.onSelect=onSelect;this.selected='';this.hit=[];this.drag=null;
   new ResizeObserver(()=>this.draw()).observe(canvas);
-  canvas.addEventListener('pointerdown',e=>{this.drag={x:e.clientX,y:e.clientY,r:this.rotation,t:this.tilt,moved:false};canvas.setPointerCapture(e.pointerId);});
-  canvas.addEventListener('pointermove',e=>{if(!this.drag)return;const dx=e.clientX-this.drag.x,dy=e.clientY-this.drag.y;if(Math.abs(dx)>4||Math.abs(dy)>4)this.drag.moved=true;this.rotation=this.drag.r+dx*.4;this.tilt=clamp(this.drag.t-dy*.25,-75,75);this.draw();});
+  canvas.addEventListener('pointerdown',e=>{this.drag={x:e.clientX,y:e.clientY,r:this.rotation,moved:false};canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{if(!this.drag)return;const dx=e.clientX-this.drag.x,dy=e.clientY-this.drag.y;if(Math.abs(dx)>4||Math.abs(dy)>4)this.drag.moved=true;this.rotation=this.drag.r+dx*.4;this.draw();});
   canvas.addEventListener('pointerup',e=>{if(this.drag&&!this.drag.moved){const rect=canvas.getBoundingClientRect();const x=e.clientX-rect.left,y=e.clientY-rect.top;const hit=this.hit.find(p=>Math.hypot(p.x-x,p.y-y)<14);if(hit)this.onSelect(hit.id);}this.drag=null;});
   canvas.addEventListener('pointercancel',()=>this.drag=null);
  }
  update(points,selected){this.points=points;this.selected=selected;this.draw();}
- focus(place){this.rotation=-place.lon;this.tilt=place.lat;this.draw();}
+ focus(place){this.rotation=-place.lon;this.draw();}
  rotate(delta){this.rotation+=delta;this.draw();}
  resizeZoom(delta){this.zoom=clamp(this.zoom+delta,.65,1.4);this.draw();}
  draw(){const rect=this.canvas.getBoundingClientRect(),w=rect.width,h=rect.height;if(!w||!h)return;const dpr=Math.min(devicePixelRatio||1,2);this.canvas.width=w*dpr;this.canvas.height=h*dpr;const c=this.ctx;c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);const r=Math.min(w*.43,h*.46)*this.zoom,cx=w/2,cy=h/2;

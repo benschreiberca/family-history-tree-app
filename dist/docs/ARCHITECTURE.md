@@ -14,12 +14,14 @@ flowchart TD
 
 ### Files and boundaries
 - `dist/data.js`: fictional people, parent/partner edges and city coordinates.
-- `dist/model.js`: pure cohort, event and projection helpers; no DOM dependencies.
+- `dist/model.js`: pure cohort, event, projection, shortest-family-path and focus-layout helpers; no DOM dependencies.
 - `dist/app.js`: shared UI state, scroll-to-year mapping, graph and details rendering.
-- `dist/globe.js`: orthographic Earth projection, front-face clipping, pointer rotation and selection.
+- `dist/globe.js`: orthographic Earth projection, front-face clipping, horizontal-only pointer rotation and selection. Tilt stays at zero, including when selecting a location.
 - `dist/styles.css`: responsive layout, visual language, focus and reduced motion.
 - `dist/index.html`: accessible shell and navigation.
 - `tests/model.test.js`: core date/location/projection invariants using Node's built-in test runner.
+
+The tree uses breadth-first relationship distance to scale cards. The focal card is centred; rows are spaced using the scaled card widths to prevent overlap. Nodes and edge endpoints interpolate together for 500 ms; reduced motion removes interpolation. Timeline movement chooses the nearest birth year, preserving the current selection on ties.
 
 The globe is a rotatable orthographic projection, not a satellite renderer. Its original coarse continent polygons are schematic. Replace with a bundled, attributed Natural Earth dataset before treating map boundaries as authoritative.
 

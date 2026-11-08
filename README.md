@@ -21,7 +21,7 @@ node --test tests/*.test.js
 ```
 
 ## Try it
-Scroll vertically to move through generations. Select a person to inspect relatives. Switch to Earth: the year and selected person carry over. Drag to rotate, use zoom buttons, and switch between birthplaces and dated residences. Search and branch filters work across both views. All records are fictional. Land outlines are schematic.
+Scroll vertically to move through generations. The focal person stays central and largest; close relatives appear larger than distant ones. Select a person to recenter and inspect relatives. Switch to Earth: the year and selected person carry over. Drag left or right to rotate along the equator, use zoom buttons, and switch between birthplaces and dated residences. Search and branch filters work across both views. All records are fictional. Land outlines are schematic.
 
 ## Documentation
 - [PRD](docs/PRD.md): scope, acceptance criteria and roadmap.

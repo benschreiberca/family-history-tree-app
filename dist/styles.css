@@ -3,3 +3,5 @@
 html,body{overflow-anchor:none}#tree{overflow:hidden}.event em{font-style:normal}.node.context{opacity:.4}
 
 @media(max-width:800px){h1{letter-spacing:-.7px}h1 br::after{content:" "}.node text{font-size:15px}.node .years{font-size:10px}.node .initial{font-size:16px}#tree{vertical-align:top}.visual{display:flex;align-items:flex-start}#earth-view:not([hidden]){display:block}#tree{align-self:stretch}.legend{flex-wrap:wrap}}
+
+#tree .node{transition:opacity .35s}#tree .node.selected rect{stroke-width:1.6;filter:drop-shadow(0 4px 12px #d5a17b20)}
