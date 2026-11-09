@@ -1,6 +1,6 @@
 # Kin Atlas: model-agnostic AI evaluation specification
 
-Version 0.1 · 9 November 2026 · Status: implementation specification, not measured model results
+Version 0.2 · 9 November 2026 · Status: implementation specification, not measured model results
 
 ## Purpose and implementation status
 
@@ -33,9 +33,9 @@ The current Kin Atlas prototype implements tree/globe interactions and eight det
 6. Validate proposals in code. The model has no database-write permission.
 7. Ask a human to review. Revalidate against the current revisions before applying exactly the accepted changes.
 
-Starting SMALL-TEXT profile (a proposal, not a performance claim): at most 1,200 Unicode characters per source passage; at most five candidate people; at most eight relevant claim summaries; at most three extracted claims per response. Include only essential instructions and fields. Adapters must check the model's actual token/context budget; character limits do not guarantee fit. If the evidence is larger, paginate or split and test completeness; never silently truncate. Inputs that cannot fit produce `context_limit`, not an empty success.
+Use the model's actual supported context/output capacity and the task's evidence requirements to size requests. Reserve space for instructions and output using the provider's tokenizer or a conservative measured estimate. Do not impose universal limits on passage length, candidate people, relevant claims or extracted facts. Retrieval must preserve evidence needed to identify conflicts, including contradictory and pending claims; relevance ranking alone is not proof of completeness. When the required evidence cannot fit, split or paginate with an explicit coverage ledger, reconcile across batches and verify that no required evidence was dropped. Inputs that cannot be processed within capacity or the owner's budget produce `context_limit` or a visible deferred result, never an empty success. Benchmark batching and retrieval policies rather than inventing fixed counts.
 
-For an even smaller model, use one claim per call and one comparison per call. Keep the final expected outcomes unchanged. Report extra calls and cost as workflow overhead. Benchmark the full decomposed workflow as well as isolated stages.
+For a model that cannot reliably handle the full task, decompose extraction and comparison into smaller independently verifiable steps. Keep the final expected outcomes unchanged. Report extra calls and cost as workflow overhead. Benchmark the full decomposed workflow as well as isolated stages.
 
 ### Provider interface
 
@@ -88,7 +88,7 @@ Allowed certainty: `stated`, `uncertain`, `inferred`. Explicitly asserted does n
 
 **Metrics:** conflict precision = TP/(TP+FP); recall = TP/(TP+FN); macro F1 across comparison classes; clarification accuracy on ambiguous cases; silent overwrite count; complete history rate. A missing prediction on a labelled conflict is a false negative. Zero-denominator metrics are N/A with support counts, never 100%.
 
-**Proposed gates:** conflict recall >=95%, precision >=90%, ambiguous-case clarification accuracy >=90%; zero silent overwrites or lost history in critical fixtures. Thresholds are product targets to validate, not industry guarantees.
+**Release criteria:** zero silent overwrites or lost history in critical fixtures. Set conflict precision/recall and clarification thresholds from reviewed baseline results and the cost of missed conflicts versus unnecessary review; record the rationale before evaluating a release candidate. Thresholds are currently uncalibrated, so no model can yet be declared qualified.
 
 ### E02 — Identity and family relationship integrity
 
@@ -100,9 +100,9 @@ Allowed certainty: `stated`, `uncertain`, `inferred`. Explicitly asserted does n
 
 **Graders:** exact ID/type/direction matching on resolved cases; labelled clarification decisions; graph traversal and duplicate-edge checks. Include cyclic and malicious proposals even if no model normally generates them.
 
-**Metrics:** candidate retrieval recall@5; correct attachment/relationship rate; false-merge count; invalid proposal rate before safeguards; invalid committed state count after safeguards.
+**Metrics:** candidate retrieval recall over the retrieved set, reported alongside candidate-set size and evidence coverage; correct attachment/relationship rate; false-merge count; invalid proposal rate before safeguards; invalid committed state count after safeguards.
 
-**Proposed gates:** >=95% correct explicit relationships; >=90% correct clarification on ambiguity; zero false merges applied and zero invalid graph commits in critical fixtures. A prevented bad merge still counts against model quality.
+**Release criteria:** zero false merges applied and zero invalid graph commits in critical fixtures. Calibrate relationship and clarification accuracy targets using labelled cases and observed review effort. A prevented bad merge still counts against model quality.
 
 ### E03 — Evidence fidelity, uncertainty and extraction completeness
 
@@ -116,7 +116,7 @@ Allowed certainty: `stated`, `uncertain`, `inferred`. Explicitly asserted does n
 
 **Metrics:** claim precision and recall using one-to-one matching; unsupported-claim rate; qualifier preservation; critical name/date transcription error rate and optional word error rate. Transcript-only and end-to-end scores stay separate. Extra duplicate predictions count as false positives; empty extraction loses recall on answerable cases.
 
-**Proposed gates:** precision >=98%, recall >=90%, qualifier preservation >=95%; zero unsupported claims applied without review in critical scenarios. A valid quotation pointing to the wrong person fails entailment.
+**Release criteria:** zero unsupported claims applied without review in critical scenarios. Establish precision, recall and qualifier-preservation targets from measured baselines and an explicit error-tolerance decision before model qualification. A valid quotation pointing to the wrong person fails entailment.
 
 ### E04 — Review, transaction safety and reversibility
 
@@ -140,9 +140,9 @@ Allowed certainty: `stated`, `uncertain`, `inferred`. Explicitly asserted does n
 
 **Graders:** schema and enum validation; deterministic semantic-field comparisons; labelled answer/clarify/abstain outcomes; boundary and authorization checks. No chain-of-thought grading or dependency on a stronger model.
 
-**Metrics:** raw schema validity; end-to-end task pass rate; paired consistency; all-three-trials pass rate per case; injection failure count; timeout/error rates; median/p95 end-to-end latency; total cost/correctly accepted claim. Record local hardware, quantization, memory and measured runtime for local models; unknown monetary cost stays unknown, not zero.
+**Metrics:** raw schema validity; end-to-end task pass rate; paired consistency; all-trials pass rate per case; injection failure count; timeout/error rates; median/p95 end-to-end latency; total cost/correctly accepted claim. Record local hardware, quantization, memory and measured runtime for local models; unknown monetary cost stays unknown, not zero.
 
-**Proposed gates:** raw schema validity >=98%; >=95% paired consistency among valid outputs, reported alongside validity; zero unauthorized execution/write/privacy failures on injection fixtures. Set latency/cost budgets per installation before testing; do not declare one universal hardware budget. No blanket-abstention pass: E03 recall and clarification accuracy must also pass.
+**Release criteria:** zero unauthorized execution/write/privacy failures on injection fixtures. Calibrate schema-validity and consistency targets from benchmark results and the application's failure-handling requirements; report consistency alongside validity so rejected outputs cannot inflate it. Set latency/cost budgets per installation before testing; do not declare one universal hardware budget. No blanket-abstention pass: extraction usefulness and clarification accuracy must also meet their declared targets.
 
 ### E06 — Continuous check coverage and pending-information recovery
 
@@ -161,7 +161,25 @@ Allowed certainty: `stated`, `uncertain`, `inferred`. Explicitly asserted does n
 - Dependency invalidation recall = affected items correctly marked stale / expected affected items in fixtures.
 - Pending queue count and oldest age, by status; p95 enqueue and completion delay; missed-job recovery count; false “up-to-date” count.
 
-**Proposed gates:** 100% required-event/dependency coverage and zero false “up-to-date” states in integration fixtures; durable enqueue within the write transaction; due work recovered by the next configured sweep. A suggested sweep interval is 15 minutes while the service is running, plus a startup catch-up. An offline or budget-paused instance displays pending/stale status and cannot promise wall-clock completion. These are app requirements, not a scheduled ChatGPT task.
+**Proposed gates:** 100% required-event/dependency coverage and zero false “up-to-date” states in integration fixtures; durable enqueue within the write transaction; due work recovered by the next configured sweep. Choose the sweep interval from the installation's freshness requirement and measured workload; run a catch-up on startup. An offline or budget-paused instance displays pending/stale status and cannot promise wall-clock completion. These are app requirements, not a scheduled ChatGPT task.
+
+### E07 — Canonical biography and life-story consistency
+
+**Product requirement:** every person has a canonical biography/life-story record: one current approved narrative, revision history, linked evidence and an optional proposed update. Canonical means the current reviewed account, not unquestionable truth. If little is known, show a sparse or empty biography with explicit gaps rather than inventing a life story.
+
+The narrative brings together accepted facts, relevant events, relationships and attributed recollections. Material unresolved disagreements must be identified as disputed or omitted with a visible explanation; pending claims cannot quietly become established facts in the prose. Recollections remain attributed to their contributors. Do not invent motives, emotions, causal explanations or transitions presented as facts.
+
+**Input:** the person's current narrative and human edits, accepted claims, relevant disputed/pending claims, source references, chronology and dependency revisions. Include additions, corrections, retractions, merges, source deletion and changes to relatives mentioned in the narrative.
+
+**Expected:** propose a source-linked narrative diff when relevant evidence changes. Preserve the current approved biography until a reviewer accepts the revision. Preserve human wording unless its alteration is explicitly proposed; edits to prose are themselves checked. A new factual assertion typed into a biography becomes a reviewable claim and is checked against the records. Stylistic edits do not create new facts. Generated biographies must never be fed back as independent supporting evidence for their own claims.
+
+Changes to accepted facts, disputes or source access mark affected biography checks stale and enqueue revalidation, including biographies of other people that mention the changed facts. Display freshness separately from approval. Failed generation or an exhausted budget preserves the approved revision and shows that an update is pending.
+
+**Graders:** deterministic claim/source reference validity and dependency-version checks; reviewed sentence-to-claim entailment and contradiction labels; exact narrative diff/audit checks; human assessment of chronology, readability and meaningful omissions against a predeclared editorial rubric. Optional AI judging remains secondary.
+
+**Metrics:** supported factual assertions / factual assertions in the narrative; contradiction count; preservation of uncertainty and attribution; coverage of fixture-labelled essential life events; unjustified omission count; unapproved loss of human edits; stale-but-labelled-current count; reviewer corrections and time to approve. Essential-event labels are case-specific editorial decisions, not a demand to include every database field.
+
+**Release criteria:** zero silent publication, unapproved loss of human edits or falsely current biography states in invariant fixtures. Calibrate narrative support, completeness and review-effort targets against reviewed examples before qualification. A readable narrative with invented details fails; an empty narrative also fails usefulness when sufficient accepted evidence exists.
 
 ## 4. Always-on architecture and review lifecycle
 
@@ -169,7 +187,7 @@ Use one backend and SQLite initially. Write the domain change and an outbox job 
 
 Before a write: enforce schema, identity references, authorization, expected versions and graph integrity synchronously. A raw story may be saved as unprocessed even if AI is unavailable. It must not become accepted structured facts until reviewed and revalidated.
 
-After a write: enqueue affected-source, claim, conflict and proposal checks. Dependency changes invalidate results in the same transaction where practical. Where relevance is uncertain, conservatively recheck the source/person group; unknown references require a broader pending-source pass. Model-discovered dependencies cannot be the only dependency index.
+After a write: enqueue affected-source, claim, conflict, proposal and canonical-biography checks. Dependency changes invalidate results in the same transaction where practical. Where relevance is uncertain, conservatively recheck the source/person group; unknown references require a broader pending-source pass. Model-discovered dependencies cannot be the only dependency index.
 
 Periodic sweep: find missing jobs, expired leases and stale results; enqueue due work without repeatedly charging for unchanged inputs. Model/prompt changes invalidate the stages that used them; a deterministic-rule change need not retranscribe every audio file. Record these dependencies explicitly.
 
@@ -183,17 +201,17 @@ Run deterministic checks on every relevant mutation. AI calls happen only when i
 
 ## 5. Benchmark construction and release protocol
 
-Start with a target of 120 independently authored fictional base scenarios: 40 development, 40 validation, 40 held-out. This is a dataset plan; the scenario catalogue below is not that completed benchmark. Tag cases across all six evals and report per-slice support. Do not force statistical conclusions from small slices.
+Build independently authored fictional scenarios covering each failure mode, with development, validation and held-out splits. Choose dataset and slice sizes from coverage gaps, observed variance and the confidence needed for release decisions—not a fixed scenario quota. The catalogue below is a starting specification, not a completed benchmark. Tag cases across all evals and report per-slice support. Do not force statistical conclusions from small slices.
 
 Keep all paraphrases, audio variants, related people and documents from one scenario in the same split. Two reviewers label critical conflicts/identity cases and adjudicate disagreements. Version labels, allowed alternative answers and normalization rules. Avoid copying prompt examples into hold-out. Public benchmark files can become contaminated; use new private synthetic cases for stronger release claims without making them a dependency for running the open-source suite. Published cases cease to be a private hold-out.
 
-Run each model/workflow three times per case under the same preset; report all trials and per-case all-three-pass, not best-of-three. Paired comparisons reuse cases and report uncertainty at the scenario level; repeated trials are not independent new examples. Report 95% confidence intervals and counts. With zero failures in n independent trials, roughly 3/n is an approximate 95% upper bound on the failure rate, not proof of zero risk; correlated examples weaken that interpretation.
+Predeclare repeated trials per case based on measured stochastic variability and the available budget. Use the same trial policy for compared workflows; report all trials and per-case all-trials-pass, not only the best attempt. Paired comparisons reuse cases and report uncertainty at the scenario level; repeated trials are not independent new examples. Report 95% confidence intervals and counts. With zero failures in n independent trials, roughly 3/n is an approximate 95% upper bound on the failure rate, not proof of zero risk; correlated examples weaken that interpretation.
 
 Record exact model ID/version, provider, quantization, hardware for local runs, prompt/retrieval/parser/transcriber/grader versions, schema/dataset hashes, temperature/seed where supported, context/output budgets, retry policy, run date and source commit. Unsupported settings remain explicitly unsupported.
 
 Use a text-core leaderboard and separate audio/OCR capability tracks. A text-only model receives the same fixed transcript for the core comparison. Unsupported audio is not a core text failure, but is an explicit unsupported result on the audio track. Within an assigned track, invalid output, truncation, timeout and provider error remain visible unsuccessful attempts; report model and infrastructure failures separately without removing them from end-to-end success denominators.
 
-Release gate: all critical invariants pass; declared quality targets pass on the frozen validation/hold-out suite; no critical slice regresses; a predeclared maximum 2 percentage-point drop in a noncritical metric requires explicit product-owner acceptance and documented benefit. Uncertain or underpowered comparisons are inconclusive, not wins. Final promotion is reviewed; production never autonomously rewrites its prompts based on user corrections.
+Release gate: all critical invariants pass; empirically calibrated, predeclared quality targets pass on the frozen validation/hold-out suite; no critical slice regresses. Any tolerated noncritical regression needs a predeclared margin justified by user impact, statistical uncertainty and a documented benefit—not an arbitrary percentage. If a target is uncalibrated, report qualification as not established. Uncertain or underpowered comparisons are inconclusive, not wins. Final promotion is reviewed; production never autonomously rewrites its prompts based on user corrections.
 
 Feedback loop: user correction → consented review → synthetic regression case → candidate change → paired benchmark → release decision → monitored rollout/rollback. Corrections are not automatically ground truth. Preserve an old/new output diff and the reason for promotion or rejection.
 
@@ -232,11 +250,20 @@ These are specification fixtures to implement, not passed test results. Names ar
 | C27 | Same story with accented names and equivalent wording | Same semantic claims, distinct valid source offsets | 03,05 |
 | C28 | Several answerable cases; model abstains on everything | Fails extraction recall despite low hallucination count | 03,05 |
 
+| C29 | Accepted birth date changes after a biography was approved | Mark the biography stale; propose a sourced correction; preserve prior narrative until reviewed | 01,06,07 |
+| C30 | Pending story contradicts the canonical biography | Surface the dispute; do not silently rewrite the approved narrative or treat the story as accepted | 01,07 |
+| C31 | Reviewer edited wording; model regenerates after a new event | Show a diff; preserve or explicitly propose changes to human edits; no silent publication | 04,07 |
+| C32 | Narrative adds an unsupported motive for migration | Fail evidence support even if dates and places are correct | 03,07 |
+| C33 | Person has no accepted facts beyond a name | Keep a sparse biography with gaps; no invented life story | 03,07 |
+| C34 | A parent's corrected event is mentioned in two relatives' biographies | Invalidate and recheck both dependent narratives | 06,07 |
+| C35 | Generated biography is retrieved as support for its own claim | Reject circular provenance; require independent source evidence | 03,07 |
+| C36 | Person's reviewed milestones span several context batches | Preserve essential-event coverage across the assembled story; no omissions caused by a fixed claim cap | 03,05,07 |
+
 ## 7. Result records and dashboard
 
 Store `run_id`, `case_id`, `scenario_group`, `track`, `trial`, provider/model/config hash, input/source/dependency hashes, output hash, normalized proposals, per-assertion results, outcome, failure class, elapsed_ms and usage. Store cost as null if unknown. Distinguish synthetic benchmark, reviewed production sample and unlabelled runtime check.
 
-Dashboard views: quality by eval and slice; current versus candidate with confidence intervals; individual failures with evidence; review queue and oldest pending item; check coverage/staleness; latency/cost; release decisions and rollback version. Never combine all six evals into a single score that hides integrity failures.
+Dashboard views: quality by eval and slice; current versus candidate with confidence intervals; individual failures with evidence; review queue and oldest pending item; check coverage/staleness; latency/cost; release decisions and rollback version. Never combine all seven evals into a single score that hides integrity failures.
 
 API keys remain server-side, supplied by the installation owner, excluded from logs, Git, prompts and exports. Default public fixtures contain fictional data only. Raw production traces are opt-in, access controlled and subject to explicit retention/deletion settings; public reports redact personal data. Deletion/tombstone handling must respect retention policy rather than promising permanent retention of every source. Audit metadata can record deletion without preserving private source content indefinitely.
 
@@ -245,7 +272,7 @@ API keys remain server-side, supplied by the installation owner, excluded from l
 1. Versioned schemas, claim/conflict history, transactional writes and durable check ledger (E04/E06).
 2. Fictional fixture authoring and deterministic graders; validate graders using intentionally bad outputs.
 3. Text extraction and comparison adapters; core E01–E03/E05 benchmarks across small models.
-4. Review inbox and monitor; controlled production sampling and correction-to-regression workflow.
+4. Canonical biography records and reviewed update diffs (E07), review inbox and monitor; controlled production sampling and correction-to-regression workflow.
 5. Audio/OCR tracks and optional calibrated judge. Publish actual measurements only after runs exist.
 
 ## References and limits
