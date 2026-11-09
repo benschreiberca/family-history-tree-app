@@ -69,3 +69,9 @@ Native mobile apps; automated Geni scraping/sync; social network; AI-invented fa
 - Dependency-free ES modules for the prototype keep it easy to inspect and host. A production UI framework is not required; add one only when complexity justifies it.
 - Self-hosted Node service + SQLite + filesystem attachments for MVP; optional storage adapters later. This minimizes cost and infrastructure, but multi-instance deployments need a different database/storage configuration.
 - Public code with private data is the default model. Hosted demo visibility is independent of repository visibility.
+
+## Canonical biography / life story — planned requirement
+
+Every person has one current approved biography/life story, backed by accepted facts, source-linked recollections and explicit handling of material disputes. Preserve narrative revisions, human edits and sentence-level evidence links. Sparse records produce sparse biographies, not invented details. Relevant fact, relationship, source or conflict changes trigger revalidation and a proposed narrative diff; the approved story remains in place until the update is reviewed. Manual factual additions to the biography also pass through claim/conflict checks. Approval and freshness are separate statuses. Never treat generated narrative as independent evidence for itself.
+
+Acceptance and regression scenarios are defined in [E07 of the AI evaluation specification](EVALS.md#e07--canonical-biography-and-life-story-consistency). This is a planned capability; the current prototype's fictional biographies are static demonstration content.
