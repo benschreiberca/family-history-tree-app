@@ -24,7 +24,7 @@ node --test tests/*.test.js
 Scroll vertically to move through generations. The focal person stays central and largest; close relatives appear larger than distant ones. Select a person to recenter and inspect relatives. Switch to Earth: the year and selected person carry over. Drag left or right to rotate along the equator, use zoom buttons, and switch between birthplaces and dated residences. Search and branch filters work across both views. All records are fictional. Land outlines are schematic.
 
 ## Documentation
-- [AI evaluation specification](docs/EVALS.md): six model-agnostic evals, small-model contract, continuous checks, scoring and 28 scenario specifications (not yet implemented).
+- [AI evaluation specification](docs/EVALS.md): seven model-agnostic evals, small-model contract, continuous checks, scoring and 36 scenario specifications (not yet implemented).
 - [PRD](docs/PRD.md): scope, acceptance criteria and roadmap.
 - [Architecture](docs/ARCHITECTURE.md): implemented prototype and proposed MVP.
 - [Prototype plan](docs/PLAN.md): implementation and validation checklist.
