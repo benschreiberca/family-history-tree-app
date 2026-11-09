@@ -249,7 +249,6 @@ These are specification fixtures to implement, not passed test results. Names ar
 | C26 | Undo accepted relation after a dependent edit | Conflict review or safe compensating transaction; preserve lineage | 04,06 |
 | C27 | Same story with accented names and equivalent wording | Same semantic claims, distinct valid source offsets | 03,05 |
 | C28 | Several answerable cases; model abstains on everything | Fails extraction recall despite low hallucination count | 03,05 |
-
 | C29 | Accepted birth date changes after a biography was approved | Mark the biography stale; propose a sourced correction; preserve prior narrative until reviewed | 01,06,07 |
 | C30 | Pending story contradicts the canonical biography | Surface the dispute; do not silently rewrite the approved narrative or treat the story as accepted | 01,07 |
 | C31 | Reviewer edited wording; model regenerates after a new event | Show a diff; preserve or explicitly propose changes to human edits; no silent publication | 04,07 |
