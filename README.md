@@ -46,3 +46,13 @@ To regenerate the downloadable source bundle and copied preview documentation, r
 - [Live voice draft workflow and evals](docs/LIVE_VOICE.md)
 
 24 automated deterministic/mock tests pass. Model quality is unmeasured until live evals run with a user-supplied key. Never commit keys, real family transcripts, recordings or browser storage exports.
+
+### Profile timelines and source research
+
+Every profile now has Timeline / Sources tabs, logged archive search queries, candidate records with references, explicit review and portable JSON export. Accepted records appear as sourced timeline events; the original narrative and relationships are retained. This prototype opens external archive search pages and stores manually attached results locally; it does not retrieve archive results automatically.
+
+- [Profile format and source workflow](docs/PERSON_PROFILES.md)
+- [Versioned JSON Schema](schemas/person-profile.schema.json)
+- [Tier-two document storage, extraction, chunking and RAG plan](docs/DOCUMENT_RAG_PLAN.md)
+
+Validation: 27 automated tests pass, including source acceptance / withdrawal, conflicts, reference preservation and unsafe URL rejection.
