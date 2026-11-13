@@ -282,3 +282,7 @@ Methodology references reviewed 9 November 2026:
 
 These inform the evaluation approach; all Kin Atlas workflows, thresholds, fixture counts and architecture choices above are proposed product decisions. Promptfoo is an optional runner adapter, not a runtime or benchmark requirement. No specific model has been benchmarked for this specification.
 
+
+## Profile sources and document retrieval extension
+
+[Person profiles](PERSON_PROFILES.md) specifies search provenance, reviewed-source traceability, conflicting event preservation, reversible acceptance and portable JSON checks. [Tier-two document RAG](DOCUMENT_RAG_PLAN.md) specifies extraction, retrieval, citation, permission isolation and deletion evals. These are additional requirements; document ingestion and RAG are not implemented. Current deterministic suite: 27 passing tests.
