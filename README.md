@@ -32,9 +32,17 @@ Scroll vertically to move through generations. The focal person stays central an
 
 ## Status
 Implemented: timeline, family graph, detail panel, globe, search, branch filtering and keyboard controls.
-Planned: editing, GEDCOM import, private accounts, persistent storage, voice stories and tagged document uploads. No Geni integration or family-data migration has been performed.
+Implemented prototype additions: grounded family chat with a user-supplied OpenRouter key, model smoke evals, live voice draft extraction, explicit identity/link review, and browser-local saving. Live model and microphone performance are not yet verified. Planned: full editing, GEDCOM import, private accounts, server persistence, canonical biography reconciliation and tagged document uploads. No Geni integration or family-data migration has been performed.
 
 ## License
 Original code is MIT licensed. The software license does not grant rights to any family's data. Public contributions must use fictional fixtures only.
 
 To regenerate the downloadable source bundle and copied preview documentation, run `python3 scripts/package-source.py`.
+
+
+## Grounded AI and live voice
+
+- [Chatbot accuracy boundaries, model candidates and evals](docs/CHATBOT_EVALS.md)
+- [Live voice draft workflow and evals](docs/LIVE_VOICE.md)
+
+24 automated deterministic/mock tests pass. Model quality is unmeasured until live evals run with a user-supplied key. Never commit keys, real family transcripts, recordings or browser storage exports.
