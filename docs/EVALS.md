@@ -1,4 +1,4 @@
-# Kin Atlas: model-agnostic AI evaluation specification
+# Family History Tree App: model-agnostic AI evaluation specification
 
 Version 0.2 · 9 November 2026 · Status: implementation specification, not measured model results
 
@@ -6,7 +6,7 @@ Version 0.2 · 9 November 2026 · Status: implementation specification, not meas
 
 Evaluate whether family stories, recordings, documents and manual edits produce useful, supported proposals without corrupting family records. Evaluate both existing records and information that has not yet been added. Support interchangeable hosted or local models, including very small text models, with owner-supplied API keys.
 
-The current Kin Atlas prototype implements tree/globe interactions and eight deterministic UI/data-model tests. It does **not** implement this AI pipeline, runtime monitor, benchmark runner, provider adapters or automatic improvement loop. Those eight tests are not evidence of AI quality. This document defines what to build and how to judge it.
+Implementation update (13 November 2026): the prototype now includes a constrained OpenRouter chat router with deterministic tree answers, a fictional model smoke-eval runner, per-request validation, and a live voice-to-draft queue with explicit review and browser-local saving. See [chat accuracy boundaries and runnable evals](CHATBOT_EVALS.md) and [live voice behavior, limitations and evals](LIVE_VOICE.md). The 24 automated tests are deterministic/mock tests, not measured model quality. Real model accuracy, microphone transcription and long-recording performance remain unverified. The complete pipeline, durable monitor and automatic improvement loop specified below are still planned.
 
 “Jev” is an unverified model reference supplied by the user. No model identity, context limit, modality support or performance is assumed. Register the exact model identifier and capabilities before testing it.
 
@@ -281,3 +281,4 @@ Methodology references reviewed 9 November 2026:
 - Promptfoo, [Test cases](https://www.promptfoo.dev/docs/configuration/test-cases/) and [Assertions and metrics](https://www.promptfoo.dev/docs/configuration/expected-outputs/): portable case inputs and explicit assertions.
 
 These inform the evaluation approach; all Kin Atlas workflows, thresholds, fixture counts and architecture choices above are proposed product decisions. Promptfoo is an optional runner adapter, not a runtime or benchmark requirement. No specific model has been benchmarked for this specification.
+
