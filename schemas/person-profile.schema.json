@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Family History Person 1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "format": {
+      "const": "family-history-person"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "person": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "biography": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": [
+                "recorded-memory",
+                "illustrative"
+              ]
+            },
+            "sourceQuotes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "text",
+            "kind",
+            "sourceQuotes"
+          ]
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "place": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "recorded",
+                  "illustrative",
+                  "reviewed"
+                ]
+              },
+              "sourceIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "date",
+              "place",
+              "status",
+              "sourceIds"
+            ]
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "biography",
+        "events"
+      ]
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "parent",
+              "partner"
+            ]
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "type"
+        ]
+      }
+    },
+    "research": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "searches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "provider": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "status": {
+                "const": "opened"
+              }
+            },
+            "required": [
+              "id",
+              "provider",
+              "url",
+              "query",
+              "createdAt",
+              "status"
+            ]
+          }
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "reference": {
+                "type": "string"
+              },
+              "finding": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "type": {
+                "enum": [
+                  "birth",
+                  "immigration",
+                  "residence",
+                  "death",
+                  "other"
+                ]
+              },
+              "date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "place": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "searchId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewNote": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "status": {
+                "enum": [
+                  "candidate",
+                  "accepted",
+                  "rejected"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "url",
+              "reference",
+              "finding",
+              "createdAt",
+              "type",
+              "date",
+              "place",
+              "searchId",
+              "reviewedAt",
+              "reviewNote",
+              "status"
+            ]
+          }
+        }
+      },
+      "required": [
+        "searches",
+        "records"
+      ]
+    }
+  },
+  "required": [
+    "format",
+    "schemaVersion",
+    "person",
+    "relationships",
+    "research"
+  ]
+}
