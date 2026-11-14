@@ -1,3 +1,5 @@
+import {CHART_STYLES} from './chart-layouts.js';
+import {initStylePicker} from './style-picker.js';
 import {mountProfile} from './profile.js';
 import {restoreVoice,initVoice} from './voice.js';
 import {initChat} from './chat.js';
@@ -19,7 +21,8 @@ function renderTree(){
  renderComparison();
  if(state.view==='tree'&&state.chart!=='timeline'){
  const list=visiblePeople(people,state.branch);charts.render(list,relationships,state.chart,state.selected,state.pair.length===2&&state.pair.every(Boolean)?relationshipBetween(...state.pair,people,relationships).path:[]);
- $('count').textContent=`${charts.people.length} people · ${state.chart==='network'?'Network':'Ancestors of '+people.find(p=>p.id===state.selected)?.name}`;
+ $('count').textContent=`${charts.people.length} people · ${CHART_STYLES.find(s=>s.id===state.chart)?.name}`;
+ $('chart-help').textContent=charts.note||`${state.chart==='network'?'Drag people or space':'Drag space'} · Scroll to zoom · Select a person`; 
  charts.svg.querySelectorAll('[data-person]').forEach(n=>{n.style.opacity=!state.query||people.find(p=>p.id===n.dataset.person).name.toLowerCase().includes(state.query.toLowerCase())?1:.2;});
  return;
  }
@@ -72,7 +75,8 @@ for(const id of ['person-a','person-b'])$(''+id).innerHTML+=[...people].sort((a,
 function choosePair(){const a=$('person-a').value,b=$('person-b').value;state.pair=[a,b];renderTree();}
 $('person-a').onchange=choosePair;$('person-b').onchange=choosePair;
 $('compare-toggle').onclick=()=>{state.compare=!state.compare;state.pair=[];$('compare-toggle').setAttribute('aria-pressed',state.compare);$('comparison').hidden=!state.compare;renderTree();};
-$('chart-style').onchange=e=>{state.chart=e.target.value;setView('tree');$('view-description').textContent=state.chart==='network'?'Explore the connections. Select a person or compare two.':state.chart==='ancestors'?'Trace a person’s recorded ancestors. Select someone to start from them.':'Scroll through generations. Select a person to explore.';};
+$('chart-fit').onclick=()=>charts.reset();
+initStylePicker(id=>{state.chart=id;setView('tree');$('view-description').textContent=CHART_STYLES.find(s=>s.id===id).hint;});
 renderPanel();renderYear();
 
 document.addEventListener('click',e=>{const details=$('relationship-result').querySelector('details');if(details&&!details.contains(e.target))details.open=false;});
