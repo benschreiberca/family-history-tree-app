@@ -6,7 +6,7 @@ const evalPeople=structuredClone(people);
 const $=id=>document.getElementById(id);
 let apiKey='',controller=null,busy=false;const stats={requests:0,verified:0,blocked:0,errors:0};
 export const aiSettings=()=>({key:apiKey,model:$('ai-model').value.trim(),freeOnly:$('ai-free').checked});
-export function requireAI(){const s=aiSettings();if(!s.key)throw Error('Add your OpenRouter key in Ask family → Settings first.');if(!$('ai-consent').checked)throw Error('Enable sending questions and names to OpenRouter in Settings.');return s;}
+export function requireAI(){const s=aiSettings();if(!s.key)throw Error('Add your OpenRouter key under Connection & recording options, or Ask family → Settings.');if(!$('ai-consent').checked)throw Error('Enable sending questions and names to OpenRouter in Settings.');return s;}
 function line(text,role='assistant'){const el=document.createElement('div');el.className='chat-line '+role;el.textContent=text;$('chat-messages').append(el);el.scrollIntoView({block:'nearest'});return el;}
 function evidence(answer,parent){if(!answer.evidence.length)return;const d=document.createElement('details'),summary=document.createElement('summary');summary.textContent='Tree evidence';d.append(summary);for(const text of answer.evidence){const p=document.createElement('p');p.textContent=text;d.append(p);}if(answer.note){const p=document.createElement('p');p.textContent=answer.note;d.append(p);}parent.append(d);}
 function status(){ $('chat-checks').textContent=`This session: ${stats.verified} tree-verified · ${stats.blocked} declined · ${stats.errors} request errors. Model accuracy not certified.`;}
