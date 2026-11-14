@@ -27,3 +27,11 @@ Select nodes with Enter or Space. Focus a new chart and use arrow keys to pan, +
 Run `npm test`. `tests/kinship.test.js` checks directional ancestry, siblings, cousin degrees/removals (including 3rd cousin twice removed), partner-only paths, missing connections, ancestry cycles, multiple common ancestors, and gender-neutral wording. Browser QA verified node-based comparison, selector-based comparison, network rendering, keyboard selection and an ancestor chart.
 
 The network layout is a small-data prototype with pairwise force calculation. It is not a production-scale graph renderer. For large trees, calculate visible neighborhoods and layout in a worker, preserve complete data for kinship, and benchmark rendering and traversal against representative family sizes. Do not cap evidence or silently drop family records to fit a display.
+
+## Ten styles — November 2026 update
+
+The visual picker now offers Focus timeline, Constellation, Pedigree, Descendants, Horizontal generations, Kinship rings, Ancestor fan, Lifespans, Relationship arcs and Hourglass. Preference persists in this browser. Selection and comparison state survive switching. Scoped views may hide members of a comparison path; the comparison text remains available. Change to Constellation to see the complete connecting path within the current branch filter.
+
+All alternate views support pan, wheel zoom, keyboard arrows / + / - / 0, Fit view, keyboard person selection and hover/focus connection emphasis. Only Constellation allows free dragging of individual nodes; structural charts preserve their positional meaning. Node movements animate unless reduced motion is requested. Long names and dense real trees still need collision and performance work; no large-tree scale claim is made.
+
+Generation columns derive from parent edges, not recorded birth years. Rings count parent or partner steps. The fan uses unique ancestors by shortest depth, not repeated binary pedigree slots. Lifespans never extend an unknown death to today. Arc spacing is ordinal. Parent cycles withhold hierarchy rather than drawing misleading generations.
