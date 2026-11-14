@@ -2,6 +2,10 @@
 
 Status: planned, not implemented. Keep the profile / source / claim IDs from tier one so upload processing does not create a competing truth store.
 
+## Local-first default (2026-11-14)
+
+The desktop product now targets local encrypted files, a local database and on-device extraction/search. See [LOCAL_FIRST_PRODUCT.md](LOCAL_FIRST_PRODUCT.md). The server/storage pattern below remains an optional hosted edition; the data contracts and evals apply to both.
+
 ## Minimal architecture
 
 Use one application backend, one relational database, private object storage and an asynchronous job worker. Start with full-text retrieval. Add a replaceable embedding index only when evaluation demonstrates a retrieval improvement. A vector database and an agent framework are not prerequisites.
