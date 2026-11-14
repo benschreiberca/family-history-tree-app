@@ -56,3 +56,10 @@ Every profile now has Timeline / Sources tabs, logged archive search queries, ca
 - [Tier-two document storage, extraction, chunking and RAG plan](docs/DOCUMENT_RAG_PLAN.md)
 
 Validation: 27 automated tests pass, including source acceptance / withdrawal, conflicts, reference preservation and unsafe URL rejection.
+
+## Product status and local-first direction
+
+- [Complete feature inventory, statuses and next work](docs/FEATURE_INVENTORY.md)
+- [Downloadable desktop product, data handling, secure model tools and encrypted sync](docs/LOCAL_FIRST_PRODUCT.md)
+
+The prototype now includes ten visual chart styles and a full-width Build with voice workspace with inline review. Desktop installers, encrypted document storage, local AI and encrypted sync are **planned**, not available yet. 31 deterministic tests pass; live incremental voice was checked with simulated speech/provider responses, not real audio.
