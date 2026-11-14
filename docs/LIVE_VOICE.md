@@ -46,3 +46,9 @@ Before production, run these model-independent evals with reference transcripts 
 | Privacy and spend | No audio or whole-tree upload to OpenRouter, no key persistence, no calls without consent, no paid fallback, and no raw private transcripts in public fixtures or reports. |
 
 Use the same labelled datasets and pipeline configuration for model comparisons. Treat any unauthorized canonical write or lost evidence as a blocking defect; calibrate accuracy and latency targets from benchmarks instead of inventing thresholds.
+
+## Workspace redesign — 2026-11-14
+
+“Tell a story” is replaced by a full-width Build with voice workspace. The large live draft sits beside the transcript, recording controls and activity log. Identity/link review is inline below the canvas; there is no voice dialog or review modal. Connection controls reuse the existing AI settings inline. A completed speech segment now flushes after 1.5 seconds without another final segment, with the existing eight-second timer as a backstop. These are processing cadence settings, not narrative length limits. Interim speech stays transcript-only until finalized. The LLM round-trip adds variable latency.
+
+A browser integration check used simulated speech and provider responses: while the recording control remained active, two people/one parent link became three people/two links after a second segment. Stop then enabled inline review. This confirms pipeline/UI behavior with mocks only. No real microphone, 1/5/10-minute run, real model quality or browser speech-service reliability was verified. Draft crash recovery is still missing. The app must not call this production-ready streaming voice.
