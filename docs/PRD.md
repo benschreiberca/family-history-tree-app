@@ -1,6 +1,8 @@
-# Kin Atlas — Product requirements
+# Family History Tree App — Product requirements
 
-Version 0.1 · 8 November 2026 · Status: proposal with interaction prototype
+Version 0.2 · 15 November 2026 · Status: evolving interaction prototype
+
+**Current UX direction:** [UX_PRIORITIES.md](UX_PRIORITIES.md) supersedes the original layout/control requirements below. The tree is an immersive full-viewport workspace, profiles are requested through a side panel or bottom sheet, and secondary controls are progressively disclosed. See [FEATURE_INVENTORY.md](FEATURE_INVENTORY.md) for current implementation status; the original scope snapshot below is historical, not a claim about the current build.
 
 ## Purpose
 An open-source, self-hostable family tree web app that makes relationships understandable through time and place. Scroll through generations, follow a person across the Earth, and collect the evidence and stories behind the tree. Any family can use it; no family names or provider IDs are hard-coded into the product.
@@ -64,14 +66,8 @@ Prototype usability trial with five people: at least four can find a relative, n
 Native mobile apps; automated Geni scraping/sync; social network; AI-invented family history; global matching engine; public-by-default profiles; photorealistic Earth imagery; billing.
 
 ## Decisions and trade-offs
-- Working name Kin Atlas; name/trademark availability not checked.
+- Working name Family History Tree App; name/trademark availability not checked.
 - MIT license for original code. Third-party assets retain their own licenses. Family data is not licensed by the software license.
 - Dependency-free ES modules for the prototype keep it easy to inspect and host. A production UI framework is not required; add one only when complexity justifies it.
 - Self-hosted Node service + SQLite + filesystem attachments for MVP; optional storage adapters later. This minimizes cost and infrastructure, but multi-instance deployments need a different database/storage configuration.
 - Public code with private data is the default model. Hosted demo visibility is independent of repository visibility.
-
-## Canonical biography / life story — planned requirement
-
-Every person has one current approved biography/life story, backed by accepted facts, source-linked recollections and explicit handling of material disputes. Preserve narrative revisions, human edits and sentence-level evidence links. Sparse records produce sparse biographies, not invented details. Relevant fact, relationship, source or conflict changes trigger revalidation and a proposed narrative diff; the approved story remains in place until the update is reviewed. Manual factual additions to the biography also pass through claim/conflict checks. Approval and freshness are separate statuses. Never treat generated narrative as independent evidence for itself.
-
-Acceptance and regression scenarios are defined in [E07 of the AI evaluation specification](EVALS.md#e07--canonical-biography-and-life-story-consistency). This is a planned capability; the current prototype's fictional biographies are static demonstration content.
