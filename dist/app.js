@@ -1,3 +1,4 @@
+import {TreeNavigation,nearestPerson} from './navigation.js';
 import {CHART_STYLES} from './chart-layouts.js';
 import {initStylePicker} from './style-picker.js';
 import {mountProfile} from './profile.js';
@@ -15,6 +16,9 @@ $('view-switch-slot').append(document.querySelector('header nav'));$('branch-slo
 const charts=new FamilyCharts($('family-chart'),id=>selectPerson(id));
 const globe=new Globe($('globe'),id=>selectPerson(id));
 
+let timelineHome={x:0,y:0,w:760,h:470},timelineBox={...timelineHome};
+function paintTimelineViewport(){$('tree').setAttribute('viewBox',`${timelineBox.x} ${timelineBox.y} ${timelineBox.w} ${timelineBox.h}`);}
+const timelineNavigation=new TreeNavigation($('tree'),{getBox:()=>timelineBox,setBox:box=>{timelineBox=box;paintTimelineViewport();},getHome:()=>timelineHome,onSelect:selectPerson,target:e=>nearestPerson($('tree'),e,'data-id'),wheel:false});
 let treeKey='';
 const mobile=matchMedia('(max-width:800px)');
 let renderedLayout=new Map(),layoutFrame=0;
@@ -23,18 +27,18 @@ function renderTree(){
  if(state.view==='tree'&&state.chart!=='timeline'){
  const list=visiblePeople(people,state.branch);charts.render(list,relationships,state.chart,state.selected,state.pair.length===2&&state.pair.every(Boolean)?relationshipBetween(...state.pair,people,relationships).path:[]);
  $('count').textContent=`${charts.people.length} people · ${CHART_STYLES.find(s=>s.id===state.chart)?.name}`;
- $('chart-help').textContent=charts.note||`${state.chart==='network'?'Drag people or space':'Drag space'} · Scroll to zoom · Select a person`; 
+ $('chart-help').textContent=charts.note||'Drag to explore · Pinch to zoom · Tap a person'; 
  charts.svg.querySelectorAll('[data-person]').forEach(n=>{n.style.opacity=!state.query||people.find(p=>p.id===n.dataset.person).name.toLowerCase().includes(state.query.toLowerCase())?1:.2;});
  return;
  }
 
  const list=visiblePeople(people,state.branch),ids=new Set(list.map(p=>p.id));
  const match=p=>!state.query||p.name.toLowerCase().includes(state.query.toLowerCase());
- const width=mobile.matches?380:760;$('tree').setAttribute('viewBox',`0 0 ${width} 470`);
+ const width=mobile.matches?380:760;if(timelineHome.w!==width){timelineHome={x:0,y:0,w:width,h:470};timelineBox={...timelineHome};}paintTimelineViewport();
  const key=state.branch+'|'+mobile.matches;
  if(key!==treeKey||!$('tree').children.length){treeKey=key;
   $('tree').innerHTML=relationships.filter(([a,b])=>ids.has(a)&&ids.has(b)).map(([a,b,type])=>`<path class="edge ${type}" data-a="${a}" data-b="${b}"/>`).join('')+list.map(p=>`<g class="node" role="button" tabindex="0" data-id="${p.id}" aria-label="${esc(p.name)}, born ${p.birth??'Birth not recorded'}"><rect width="162" height="58" rx="7"/><circle class="avatar" cx="23" cy="28" r="14"/><text class="initial" x="23" y="33" text-anchor="middle">${p.name[0]}</text><text x="45" y="24">${esc(p.name)}</text><text class="years" x="45" y="42">${p.birth??'Birth not recorded'}${p.death?' — '+p.death:' · '+esc(p.branch)}</text></g>`).join('');
-  $('tree').querySelectorAll('.node').forEach(node=>{node.addEventListener('click',()=>selectPerson(node.dataset.id));node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPerson(node.dataset.id);}});});
+  $('tree').querySelectorAll('.node').forEach(node=>{node.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectPerson(node.dataset.id);}});});
  }
  const focusId=ids.has(state.selected)?state.selected:focusForYear(list,state.year,state.selected),distances=familyDistances(focusId,relationships),target=focusLayout(list,focusId,relationships,width);
  const nodes=[...$('tree').querySelectorAll('.node')],edges=[...$('tree').querySelectorAll('.edge')];
@@ -50,8 +54,8 @@ function renderTree(){
  $('count').textContent=`${list.length} people · Focus: ${people.find(p=>p.id===focusId)?.name||'none'}`;
 }
 function followYear(){const candidates=visiblePeople(people,state.branch).filter(p=>!state.query||p.name.toLowerCase().includes(state.query.toLowerCase()));const id=focusForYear(candidates,state.year,state.selected);if(id!==state.selected){state.selected=id;renderPanel();}}
-function renderPanel(){const p=people.find(p=>p.id===state.selected),rel=relatives(p.id,people,relationships);$('selected-name').textContent=p.name;$('profile-open').setAttribute('aria-label','Open life and sources for '+p.name);$('person-panel').innerHTML=`<div class="profile-top"><span>A THREAD IN THE ATLAS</span><span>↗</span></div><div class="portrait" aria-hidden="true">${p.name.split(' ').map(s=>s[0]).join('')}</div><h2>${esc(p.name)}</h2><div class="lifespan">${p.birth??'Birth not recorded'}${p.death?' — '+p.death:' · Death not recorded'}</div><p class="bio">${esc(p.bio)}</p><div class="panel-heading">CONNECTED PEOPLE</div>${rel.map(r=>`<button class="relative" data-relative="${r.person.id}"><span>${esc(r.person.name)}</span><small>${r.label} ↗</small></button>`).join('')}<p class="panel-note">${p.personal?'Reviewed voice addition. Saved only in this browser.':'Fictional demonstration record. Biography and places are illustrative.'}</p>`;
- mountProfile($('person-panel'),p,relationships,places);
+function renderPanel(){const p=people.find(p=>p.id===state.selected),rel=relatives(p.id,people,relationships);$('selected-name').textContent=p.name;$('profile-open').setAttribute('aria-label','Open life and sources for '+p.name);$('person-panel').innerHTML=`<div class="profile-top"><span>A THREAD IN THE ATLAS</span><span>↗</span></div><div class="portrait" aria-hidden="true">${p.name.split(' ').map(s=>s[0]).join('')}</div><h2>${esc(p.name)}</h2><div class="lifespan">${p.birth??'Birth not recorded'}${p.death?' — '+p.death:' · Death not recorded'}</div><dl class="profile-facts"><div><dt>Birthplace</dt><dd>${esc(places[p.events.find(e=>e.type==='birth')?.place]?.name||'Not recorded')}</dd></div><div><dt>Last recorded residence</dt><dd>${esc((()=>{const e=[...p.events].filter(e=>e.type==='residence').sort((a,b)=>b.year-a.year)[0];return e?places[e.place]?.name+' · '+e.year:'Not recorded';})())}</dd></div></dl><p class="bio">${esc(p.bio)}</p><p class="panel-note">${p.personal?'Reviewed voice addition. Saved only in this browser.':'Fictional demonstration record. Biography and places are illustrative.'}</p>`;
+ mountProfile($('person-panel'),p,relationships,places,id=>selectPerson(id));
  $('person-panel').querySelectorAll('[data-relative]').forEach(b=>b.onclick=()=>selectPerson(b.dataset.relative));}
 function selectPerson(id){if(state.compare){if(state.pair.length===2&&state.pair.every(Boolean))state.pair=[];if(!state.pair.includes(id)){if(!state.pair[0])state.pair[0]=id;else state.pair[1]=id;}}state.selected=id;const p=people.find(p=>p.id===id);if(state.branch!=='all'&&p.branch!==state.branch){state.branch='all';$('branch').value='all';}renderPanel();renderTree();updateGlobe(true);}
 function mapPoints(){return visiblePeople(people,state.branch).filter(p=>!state.query||p.name.toLowerCase().includes(state.query.toLowerCase())).flatMap(p=>{const e=eventAt(p,state.view==='earth'?MAX_YEAR:state.year,state.kind);return e&&places[e.place]?[{id:p.id,name:p.name,year:e.year,place:places[e.place]}]:[];});}
@@ -60,7 +64,7 @@ function renderYear(){$('progress').style.width=`${100*(state.year-MIN_YEAR)/(MA
 function maxScroll(){return Math.max(1,document.documentElement.scrollHeight-innerHeight);}
 function goYear(year){state.year=clamp(Math.round(year),MIN_YEAR,MAX_YEAR);followYear();window.scrollTo({top:(state.year-MIN_YEAR)/(MAX_YEAR-MIN_YEAR)*maxScroll(),behavior:'instant'});renderYear();}
 let queued=false;window.addEventListener('scroll',()=>{if(document.body.classList.contains('voice-workspace-open')||!$('profile-drawer').hidden||!$('style-picker').hidden||!$('search-tools').hidden||!$('explore-tools').hidden||state.view==='earth'||state.chart!=='timeline'||(document.activeElement?.closest('#person-panel')||$('person-panel').matches(':hover'))||queued)return;queued=true;requestAnimationFrame(()=>{queued=false;const fraction=clamp(scrollY/maxScroll(),0,1),year=Math.round(MIN_YEAR+fraction*(MAX_YEAR-MIN_YEAR));document.documentElement.style.setProperty('--parallax',`${(fraction-.5)*40}px`);if(year!==state.year){state.year=year;followYear();renderYear();}});},{passive:true});
-function setView(view){state.view=view;$('tree-view').hidden=view!=='tree'||state.chart!=='timeline';$('chart-view').hidden=view!=='tree'||state.chart==='timeline';document.querySelector('.style-control').hidden=view!=='tree';$('comparison').hidden=view!=='tree'||!state.compare;$('earth-view').hidden=view!=='earth';$('tree-mode').setAttribute('aria-pressed',view==='tree');$('earth-mode').setAttribute('aria-pressed',view==='earth');$('view-description').textContent=view==='tree'?'Scroll through generations. Select a person to explore.':'Explore where your family’s lives unfolded.';if(view==='earth')updateGlobe(true);else renderTree();}
+function setView(view){state.view=view;document.body.dataset.explorerView=view;$('canvas-navigation').hidden=view!=='tree';$('tree-view').hidden=view!=='tree'||state.chart!=='timeline';$('chart-view').hidden=view!=='tree'||state.chart==='timeline';document.querySelector('.style-control').hidden=view!=='tree';$('comparison').hidden=view!=='tree'||!state.compare;$('earth-view').hidden=view!=='earth';$('tree-mode').setAttribute('aria-pressed',view==='tree');$('earth-mode').setAttribute('aria-pressed',view==='earth');$('view-description').textContent=view==='tree'?'Scroll through generations. Select a person to explore.':'Explore where your family’s lives unfolded.';if(view==='earth')updateGlobe(true);else renderTree();}
 $('tree-mode').onclick=()=>{setView('tree');closeTools();};$('earth-mode').onclick=()=>{setView('earth');closeTools();};$('branch').onchange=e=>{state.branch=e.target.value;followYear();renderTree();updateGlobe();};$('event-kind').onchange=e=>{state.kind=e.target.value;updateGlobe(true);};
 $('search').oninput=e=>{state.query=e.target.value.trim();const matches=visiblePeople(people,state.branch).filter(p=>p.name.toLowerCase().includes(state.query.toLowerCase()));$('search-results').hidden=!state.query;$('search-results').innerHTML=matches.length?matches.map(p=>`<button data-result="${p.id}">${esc(p.name)} · ${p.birth??'Birth not recorded'}</button>`).join(''):'No matching people';$('search-results').querySelectorAll('button').forEach(b=>b.onclick=()=>{state.query='';$('search').value='';selectPerson(b.dataset.result);$('search-results').hidden=true;$('search-tools').hidden=true;$('search-toggle').setAttribute('aria-expanded','false');$('profile-open').focus({preventScroll:true});if(state.chart==='timeline'&&!state.compare)goYear(people.find(p=>p.id===b.dataset.result).birth);});renderTree();updateGlobe();};$('search').onkeydown=e=>{if(e.key==='Escape'){$('search-results').hidden=true;state.query='';$('search').value='';renderTree();updateGlobe();e.target.blur();}};document.addEventListener('click',e=>{if(!e.target.closest('.filters'))$('search-results').hidden=true;});
 mobile.addEventListener('change',()=>{treeKey='';renderTree();});
@@ -99,8 +103,17 @@ document.addEventListener('click',e=>{if(!e.target.closest('#explore-tools,#tool
 
 $('compare-close').onclick=()=>{state.compare=false;state.pair=[];$('compare-toggle').setAttribute('aria-pressed','false');$('comparison').hidden=true;renderTree();$('tools-toggle').focus({preventScroll:true});};
 
-// Forgiving touch targets for the generation-focus tree, without overlapping SVG overlays.
-let treeTouch=null;
-$('tree').addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;let node=e.target.closest('[data-id]');if(!node){let best=Infinity;for(const n of $('tree').querySelectorAll('[data-id]')){const r=n.getBoundingClientRect(),d=Math.hypot(Math.max(r.left-e.clientX,0,e.clientX-r.right),Math.max(r.top-e.clientY,0,e.clientY-r.bottom));if(d<=22&&d<best){best=d;node=n;}}}treeTouch=node?{id:node.dataset.id,x:e.clientX,y:e.clientY,direct:!!e.target.closest('[data-id]')}:null;});
-$('tree').addEventListener('pointerup',e=>{const t=treeTouch;treeTouch=null;if(t&&!t.direct&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<12)selectPerson(t.id);});
-$('tree').addEventListener('pointercancel',()=>treeTouch=null);
+
+
+const activeNavigation=()=>state.chart==='timeline'?timelineNavigation:charts.navigation;
+$('canvas-zoom-in').onclick=()=>activeNavigation().zoom(.8);
+$('canvas-zoom-out').onclick=()=>activeNavigation().zoom(1.25);
+$('canvas-fit').onclick=()=>activeNavigation().reset();
+$('profile-expand').onclick=()=>{const panel=$('profile-drawer'),expanded=panel.classList.toggle('expanded');panel.style.removeProperty('width');$('profile-expand').setAttribute('aria-pressed',expanded);$('profile-expand').textContent=expanded?'Narrow panel':'Expand panel';};
+let resizePanel=null;
+$('profile-resize').addEventListener('pointerdown',e=>{if(e.button!==0)return;resizePanel={x:e.clientX,w:$('profile-drawer').getBoundingClientRect().width};$('profile-resize').setPointerCapture(e.pointerId);});
+$('profile-resize').addEventListener('pointermove',e=>{if(!resizePanel)return;$('profile-drawer').classList.remove('expanded');$('profile-drawer').style.width=Math.max(320,Math.min(innerWidth-24,resizePanel.w+resizePanel.x-e.clientX))+'px';});
+for(const event of ['pointerup','pointercancel'])$('profile-resize').addEventListener(event,()=>resizePanel=null);
+$('profile-resize').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();$('profile-drawer').style.width=Math.max(320,Math.min(innerWidth-24,$('profile-drawer').getBoundingClientRect().width+(e.key==='ArrowLeft'?40:-40)))+'px';}});
+
+$('tree').addEventListener('keydown',e=>{if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();if(e.key==='0')timelineNavigation.reset();else if(['+','=','-'].includes(e.key))timelineNavigation.zoom(e.key==='-'?1.25:.8);else{timelineBox={...timelineBox,x:timelineBox.x+(e.key==='ArrowLeft'?-30:e.key==='ArrowRight'?30:0),y:timelineBox.y+(e.key==='ArrowUp'?-30:e.key==='ArrowDown'?30:0)};paintTimelineViewport();}}});
