@@ -57,3 +57,11 @@ Voice remains a separate full-width creation workspace, not a modal stacked over
 ## Status and limits
 
 Implemented: immersive explorer CSS/layout, compact toolbar, on-demand search/tools, profile drawer/sheet, Escape close and selected-person chip. Existing graph correctness suite remains separate from usability evidence. No formal usability study, full accessibility audit or large-family performance certification is implied. The product inventory remains the source for whether underlying features are implemented, partial or planned.
+
+## Navigation and profile update — 2026-11-15
+
+The biography now uses a full-height side panel on all screen sizes, replacing the earlier mobile bottom sheet. Desktop width starts at 440 px, can be resized from its left edge or expanded to 760 px; on narrow screens it uses nearly the available width. Timeline, Sources and Family tabs provide event details, provenance and clickable relatives, with recorded-place facts and current evidence counts. The panel remains closed until requested.
+
+The timeline and alternate charts now share pointer navigation: drag to pan even when starting over a person, pinch around the midpoint to zoom, then continue panning with the remaining finger. A stationary tap selects; finger drift is tolerated; cancellation and pinch never select someone. Network node repositioning is deliberately Alt-drag with a mouse so ordinary panning cannot rearrange people. Trackpad small wheel deltas pan; Ctrl-wheel / trackpad pinch and mouse-wheel zoom around the pointer. Timeline plain wheel retains chronological page navigation; touch drag pans the camera. Visible + / − / Fit tree controls recover from any zoom level. Keyboard navigation is supported.
+
+35 deterministic tests pass, including anchor math, pinch-to-pan continuity, tap/drag distinction and cancellation. Browser checks verified zoom → drag changes camera position and Fit recovery, plus expanded profile tabs. These do not substitute for physical-device multitouch testing.
