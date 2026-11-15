@@ -1,18 +1,16 @@
+import {TreeNavigation,nearestPerson} from './navigation.js';
 import {buildLayout,ROOTED} from './chart-layouts.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export class FamilyCharts{
  constructor(svg,onSelect){this.svg=svg;this.onSelect=onSelect;this.positions=new Map();this.home={x:0,y:0,w:960,h:600};this.box={...this.home};this.drag=null;
- svg.addEventListener('pointerdown',e=>{if(e.button!==0)return;const node=this.tapTarget(e);this.drag={threshold:e.pointerType==='touch'?12:5,id:node?.dataset.person,x:e.clientX,y:e.clientY,box:{...this.box},moved:false};svg.setPointerCapture(e.pointerId);});
- svg.addEventListener('pointermove',e=>{if(!this.drag)return;const dx=e.clientX-this.drag.x,dy=e.clientY-this.drag.y;if(Math.hypot(dx,dy)>this.drag.threshold)this.drag.moved=true;if(!this.drag.moved)return;const scale=1/svg.getScreenCTM().a;if(this.drag.id&&this.mode==='network'){const p=new DOMPoint(e.clientX,e.clientY).matrixTransform(svg.getScreenCTM().inverse());this.positions.set(this.drag.id,{x:p.x,y:p.y});this.paint();}else{this.box.x=this.drag.box.x-dx*scale;this.box.y=this.drag.box.y-dy*scale;this.viewport();}});
- svg.addEventListener('pointerup',()=>{const d=this.drag;this.drag=null;if(d?.id&&!d.moved)this.onSelect(d.id);});svg.addEventListener('pointercancel',()=>this.drag=null);
+ this.navigation=new TreeNavigation(svg,{getBox:()=>this.box,setBox:box=>{this.box=box;this.viewport();},getHome:()=>this.home,onSelect,target:e=>nearestPerson(svg,e,'data-person'),onNodeDrag:(id,p)=>{if(this.mode==='network'){this.positions.set(id,p);this.paint();}}});
  svg.addEventListener('keydown',e=>{const id=e.target.closest('[data-person]')?.dataset.person;if(id&&(e.key==='Enter'||e.key===' ')){e.preventDefault();this.onSelect(id);}else if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','0'].includes(e.key)){e.preventDefault();if(e.key==='0')this.reset();else if(['+','=','-'].includes(e.key))this.zoom(e.key==='-'?1.15:.85);else{this.box.x+=e.key==='ArrowLeft'?-30:e.key==='ArrowRight'?30:0;this.box.y+=e.key==='ArrowUp'?-30:e.key==='ArrowDown'?30:0;}this.viewport();}});
- svg.addEventListener('wheel',e=>{if(e.ctrlKey)return;e.preventDefault();this.zoom(Math.exp(Math.max(-100,Math.min(100,e.deltaY))*.002));},{passive:false});
  svg.addEventListener('pointerover',e=>this.highlight(e.target.closest('[data-person]')?.dataset.person));svg.addEventListener('pointerleave',()=>this.highlight(null));svg.addEventListener('focusin',e=>this.highlight(e.target.closest('[data-person]')?.dataset.person));svg.addEventListener('focusout',()=>this.highlight(null));
  }
  reset(){this.box={...this.home};this.viewport();}
  tapTarget(e){const direct=e.target.closest('[data-person]');if(direct)return direct;let best=null,distance=Infinity;for(const node of this.svg.querySelectorAll('[data-person]')){const r=node.getBoundingClientRect(),dx=Math.max(r.left-e.clientX,0,e.clientX-r.right),dy=Math.max(r.top-e.clientY,0,e.clientY-r.bottom),d=Math.hypot(dx,dy),pad=e.pointerType==='touch'?22:10;if(d<=pad&&d<distance){distance=d;best=node;}}return best;}
  viewport(){this.svg.setAttribute('viewBox',`${this.box.x} ${this.box.y} ${this.box.w} ${this.box.h}`);}
- zoom(f){const w=Math.max(this.home.w*.2,Math.min(this.home.w*3,this.box.w*f)),h=w*this.home.h/this.home.w;this.box.x+=(this.box.w-w)/2;this.box.y+=(this.box.h-h)/2;this.box.w=w;this.box.h=h;this.viewport();}
+ zoom(f){this.navigation.zoom(f);}
  render(people,edges,mode,selected,path=[]){const previous=this.positions;const focused=this.svg.querySelector('[data-person]:focus')?.dataset.person;this.selected=selected;this.path=path;this.mode=mode;
  const key=JSON.stringify([mode,people.map(p=>[p.id,p.birth,p.death]),edges,ROOTED.has(mode)?selected:null]);
  if(this.key!==key){this.key=key;const l=buildLayout(people,edges,mode,selected);Object.assign(this,{people:l.people,edges:l.edges,positions:l.positions,guides:l.guides,bars:l.bars,note:l.note});this.home={x:0,y:0,w:l.w,h:l.h};this.box={...this.home};}
