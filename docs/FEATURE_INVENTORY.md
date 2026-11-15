@@ -1,6 +1,10 @@
 # Family History Tree App — feature inventory
 
-Reviewed 2026-11-14. This is a prototype, not a production release. **Implemented** means present in the current code; **Partial** means usable but with material gaps; **Planned** means not built. Validation is stated separately. No actual private family records are bundled in the public project.
+Reviewed 2026-11-15. This is a prototype, not a production release. **Implemented** means present in the current code; **Partial** means usable but with material gaps; **Planned** means not built. Validation is stated separately. No actual private family records are bundled in the public project.
+
+## UX priority update
+
+[UX_PRIORITIES.md](UX_PRIORITIES.md) ranks the complete product capability groups and defines the immersive interaction model. The default explorer now uses a full-viewport tree, floating compact toolbar, on-demand search/tools and profile side drawer (bottom sheet on narrow screens).
 
 ## Explore and visualize
 
