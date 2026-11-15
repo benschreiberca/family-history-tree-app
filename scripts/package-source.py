@@ -5,7 +5,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 root = Path(__file__).resolve().parent.parent
 out = root / 'dist'
 (out / 'docs').mkdir(exist_ok=True)
-for name in ('PRD.md', 'ARCHITECTURE.md'):
+for name in ('PRD.md', 'ARCHITECTURE.md', 'UX_PRIORITIES.md', 'FEATURE_INVENTORY.md'):
     copy2(root / 'docs' / name, out / 'docs' / name)
 paths = [root / name for name in ('README.md','LICENSE','CONTRIBUTING.md','SECURITY.md','package.json','.gitignore')]
 for folder in ('dist','docs','tests','scripts','schemas'):
