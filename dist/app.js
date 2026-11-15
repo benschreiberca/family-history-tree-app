@@ -98,3 +98,9 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('profile-draw
 document.addEventListener('click',e=>{if(!e.target.closest('#explore-tools,#tools-toggle'))closeTools();});
 
 $('compare-close').onclick=()=>{state.compare=false;state.pair=[];$('compare-toggle').setAttribute('aria-pressed','false');$('comparison').hidden=true;renderTree();$('tools-toggle').focus({preventScroll:true});};
+
+// Forgiving touch targets for the generation-focus tree, without overlapping SVG overlays.
+let treeTouch=null;
+$('tree').addEventListener('pointerdown',e=>{if(e.pointerType!=='touch')return;let node=e.target.closest('[data-id]');if(!node){let best=Infinity;for(const n of $('tree').querySelectorAll('[data-id]')){const r=n.getBoundingClientRect(),d=Math.hypot(Math.max(r.left-e.clientX,0,e.clientX-r.right),Math.max(r.top-e.clientY,0,e.clientY-r.bottom));if(d<=22&&d<best){best=d;node=n;}}}treeTouch=node?{id:node.dataset.id,x:e.clientX,y:e.clientY,direct:!!e.target.closest('[data-id]')}:null;});
+$('tree').addEventListener('pointerup',e=>{const t=treeTouch;treeTouch=null;if(t&&!t.direct&&Math.hypot(e.clientX-t.x,e.clientY-t.y)<12)selectPerson(t.id);});
+$('tree').addEventListener('pointercancel',()=>treeTouch=null);
