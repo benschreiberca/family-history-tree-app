@@ -12,6 +12,7 @@ import {Globe} from './globe.js';
 const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 restoreVoice();
 const state={year:1870,selected:'ines',branch:'all',view:'tree',kind:'birth',query:'',chart:'timeline',compare:false,pair:[]};
+document.querySelector('.world').append(document.querySelector('.style-control'));
 $('view-switch-slot').append(document.querySelector('header nav'));$('branch-slot').append($('branch').closest('label'));
 const charts=new FamilyCharts($('family-chart'),id=>selectPerson(id));
 const globe=new Globe($('globe'),id=>selectPerson(id));
@@ -19,11 +20,14 @@ const globe=new Globe($('globe'),id=>selectPerson(id));
 let timelineHome={x:0,y:0,w:760,h:470},timelineBox={...timelineHome};
 function paintTimelineViewport(){$('tree').setAttribute('viewBox',`${timelineBox.x} ${timelineBox.y} ${timelineBox.w} ${timelineBox.h}`);}
 const timelineNavigation=new TreeNavigation($('tree'),{getBox:()=>timelineBox,setBox:box=>{timelineBox=box;paintTimelineViewport();},getHome:()=>timelineHome,onSelect:selectPerson,target:e=>nearestPerson($('tree'),e,'data-id'),wheel:false});
-let treeKey='';
+let treeKey='',voiceDraft=null,lastDraftCount=0;
+
 const mobile=matchMedia('(max-width:800px)');
 let renderedLayout=new Map(),layoutFrame=0;
 function renderTree(){
  renderComparison();
+ if(voiceDraft){$('tree-view').hidden=true;$('earth-view').hidden=true;$('chart-view').hidden=false;const draftIds=new Set(voiceDraft.people.map(p=>p.id)),list=[...people,...voiceDraft.people];charts.render(list,[...relationships,...voiceDraft.links],state.chart==='timeline'?'network':state.chart,voiceDraft.selected||voiceDraft.people[0]?.id||state.selected,[]);charts.svg.querySelectorAll('[data-person]').forEach(n=>n.classList.toggle('draft-person',draftIds.has(n.dataset.person)));if(voiceDraft.people.length&&voiceDraft.people.length!==lastDraftCount){const points=voiceDraft.people.map(p=>charts.positions.get(p.id)).filter(Boolean);if(points.length){const minX=Math.min(...points.map(p=>p.x)),maxX=Math.max(...points.map(p=>p.x)),minY=Math.min(...points.map(p=>p.y)),maxY=Math.max(...points.map(p=>p.y)),rect=charts.svg.getBoundingClientRect(),ratio=rect.width/Math.max(1,rect.height),w=Math.max(400,maxX-minX+160,(maxY-minY+140)*ratio),h=w/ratio;charts.box={x:(minX+maxX-w)/2,y:(minY+maxY-h)/2,w,h};charts.viewport();}}lastDraftCount=voiceDraft.people.length;$('count').textContent=`${people.length} saved · ${voiceDraft.people.length} draft people`;$('chart-help').textContent='Your family, growing from your words · Drafts require review';return;}
+
  if(state.view==='tree'&&state.chart!=='timeline'){
  const list=visiblePeople(people,state.branch);charts.render(list,relationships,state.chart,state.selected,state.pair.length===2&&state.pair.every(Boolean)?relationshipBetween(...state.pair,people,relationships).path:[]);
  $('count').textContent=`${charts.people.length} people · ${CHART_STYLES.find(s=>s.id===state.chart)?.name}`;
@@ -57,13 +61,13 @@ function followYear(){const candidates=visiblePeople(people,state.branch).filter
 function renderPanel(){const p=people.find(p=>p.id===state.selected),rel=relatives(p.id,people,relationships);$('selected-name').textContent=p.name;$('profile-open').setAttribute('aria-label','Open life and sources for '+p.name);$('person-panel').innerHTML=`<div class="profile-top"><span>A THREAD IN THE ATLAS</span><span>↗</span></div><div class="portrait" aria-hidden="true">${p.name.split(' ').map(s=>s[0]).join('')}</div><h2>${esc(p.name)}</h2><div class="lifespan">${p.birth??'Birth not recorded'}${p.death?' — '+p.death:' · Death not recorded'}</div><dl class="profile-facts"><div><dt>Birthplace</dt><dd>${esc(places[p.events.find(e=>e.type==='birth')?.place]?.name||'Not recorded')}</dd></div><div><dt>Last recorded residence</dt><dd>${esc((()=>{const e=[...p.events].filter(e=>e.type==='residence').sort((a,b)=>b.year-a.year)[0];return e?places[e.place]?.name+' · '+e.year:'Not recorded';})())}</dd></div></dl><p class="bio">${esc(p.bio)}</p><p class="panel-note">${p.personal?'Reviewed voice addition. Saved only in this browser.':'Fictional demonstration record. Biography and places are illustrative.'}</p>`;
  mountProfile($('person-panel'),p,relationships,places,id=>selectPerson(id));
  $('person-panel').querySelectorAll('[data-relative]').forEach(b=>b.onclick=()=>selectPerson(b.dataset.relative));}
-function selectPerson(id){if(state.compare){if(state.pair.length===2&&state.pair.every(Boolean))state.pair=[];if(!state.pair.includes(id)){if(!state.pair[0])state.pair[0]=id;else state.pair[1]=id;}}state.selected=id;const p=people.find(p=>p.id===id);if(state.branch!=='all'&&p.branch!==state.branch){state.branch='all';$('branch').value='all';}renderPanel();renderTree();updateGlobe(true);}
+function selectPerson(id){if(voiceDraft?.people.some(p=>p.id===id)){document.dispatchEvent(new CustomEvent('draft-person-selected',{detail:{id}}));return;}if(state.compare){if(state.pair.length===2&&state.pair.every(Boolean))state.pair=[];if(!state.pair.includes(id)){if(!state.pair[0])state.pair[0]=id;else state.pair[1]=id;}}state.selected=id;const p=people.find(p=>p.id===id);if(state.branch!=='all'&&p.branch!==state.branch){state.branch='all';$('branch').value='all';}renderPanel();renderTree();updateGlobe(true);}
 function mapPoints(){return visiblePeople(people,state.branch).filter(p=>!state.query||p.name.toLowerCase().includes(state.query.toLowerCase())).flatMap(p=>{const e=eventAt(p,state.view==='earth'?MAX_YEAR:state.year,state.kind);return e&&places[e.place]?[{id:p.id,name:p.name,year:e.year,place:places[e.place]}]:[];});}
 function updateGlobe(focus=false){const points=mapPoints();globe.update(points,state.selected);if(focus){const p=points.find(p=>p.id===state.selected);if(p)globe.focus(p.place);}const grouped=new Map();for(const p of points){if(!grouped.has(p.place.name))grouped.set(p.place.name,[]);grouped.get(p.place.name).push(p);}$('locations').innerHTML=points.length?[...grouped].map(([name,group])=>`<button data-place="${group.find(p=>p.id===state.selected)?.id||group[0].id}" class="${group.some(p=>p.id===state.selected)?'active':''}" title="${esc(group.map(p=>p.name+' ('+p.year+')').join(', '))}">${esc(name)} · ${group.length}</button>`).join(''):'<p class="map-note">No recorded locations match this filter.</p>';$('locations').querySelectorAll('button').forEach(b=>b.onclick=()=>selectPerson(b.dataset.place));}
 function renderYear(){$('progress').style.width=`${100*(state.year-MIN_YEAR)/(MAX_YEAR-MIN_YEAR)}%`;renderTree();if(state.view==='earth')updateGlobe();}
 function maxScroll(){return Math.max(1,document.documentElement.scrollHeight-innerHeight);}
 function goYear(year){state.year=clamp(Math.round(year),MIN_YEAR,MAX_YEAR);followYear();window.scrollTo({top:(state.year-MIN_YEAR)/(MAX_YEAR-MIN_YEAR)*maxScroll(),behavior:'instant'});renderYear();}
-let queued=false;window.addEventListener('scroll',()=>{if(document.body.classList.contains('voice-workspace-open')||!$('profile-drawer').hidden||!$('style-picker').hidden||!$('search-tools').hidden||!$('explore-tools').hidden||state.view==='earth'||state.chart!=='timeline'||(document.activeElement?.closest('#person-panel')||$('person-panel').matches(':hover'))||queued)return;queued=true;requestAnimationFrame(()=>{queued=false;const fraction=clamp(scrollY/maxScroll(),0,1),year=Math.round(MIN_YEAR+fraction*(MAX_YEAR-MIN_YEAR));document.documentElement.style.setProperty('--parallax',`${(fraction-.5)*40}px`);if(year!==state.year){state.year=year;followYear();renderYear();}});},{passive:true});
+let queued=false;window.addEventListener('scroll',()=>{if((document.body.classList.contains('voice-workspace-open')||document.body.classList.contains('voice-inline-open'))||!$('profile-drawer').hidden||!$('search-tools').hidden||!$('explore-tools').hidden||state.view==='earth'||state.chart!=='timeline'||(document.activeElement?.closest('#person-panel')||$('person-panel').matches(':hover'))||queued)return;queued=true;requestAnimationFrame(()=>{queued=false;const fraction=clamp(scrollY/maxScroll(),0,1),year=Math.round(MIN_YEAR+fraction*(MAX_YEAR-MIN_YEAR));document.documentElement.style.setProperty('--parallax',`${(fraction-.5)*40}px`);if(year!==state.year){state.year=year;followYear();renderYear();}});},{passive:true});
 function setView(view){state.view=view;document.body.dataset.explorerView=view;$('canvas-navigation').hidden=view!=='tree';$('tree-view').hidden=view!=='tree'||state.chart!=='timeline';$('chart-view').hidden=view!=='tree'||state.chart==='timeline';document.querySelector('.style-control').hidden=view!=='tree';$('comparison').hidden=view!=='tree'||!state.compare;$('earth-view').hidden=view!=='earth';$('tree-mode').setAttribute('aria-pressed',view==='tree');$('earth-mode').setAttribute('aria-pressed',view==='earth');$('view-description').textContent=view==='tree'?'Scroll through generations. Select a person to explore.':'Explore where your family’s lives unfolded.';if(view==='earth')updateGlobe(true);else renderTree();}
 $('tree-mode').onclick=()=>{setView('tree');closeTools();};$('earth-mode').onclick=()=>{setView('earth');closeTools();};$('branch').onchange=e=>{state.branch=e.target.value;followYear();renderTree();updateGlobe();};$('event-kind').onchange=e=>{state.kind=e.target.value;updateGlobe(true);};
 $('search').oninput=e=>{state.query=e.target.value.trim();const matches=visiblePeople(people,state.branch).filter(p=>p.name.toLowerCase().includes(state.query.toLowerCase()));$('search-results').hidden=!state.query;$('search-results').innerHTML=matches.length?matches.map(p=>`<button data-result="${p.id}">${esc(p.name)} · ${p.birth??'Birth not recorded'}</button>`).join(''):'No matching people';$('search-results').querySelectorAll('button').forEach(b=>b.onclick=()=>{state.query='';$('search').value='';selectPerson(b.dataset.result);$('search-results').hidden=true;$('search-tools').hidden=true;$('search-toggle').setAttribute('aria-expanded','false');$('profile-open').focus({preventScroll:true});if(state.chart==='timeline'&&!state.compare)goYear(people.find(p=>p.id===b.dataset.result).birth);});renderTree();updateGlobe();};$('search').onkeydown=e=>{if(e.key==='Escape'){$('search-results').hidden=true;state.query='';$('search').value='';renderTree();updateGlobe();e.target.blur();}};document.addEventListener('click',e=>{if(!e.target.closest('.filters'))$('search-results').hidden=true;});
@@ -81,7 +85,7 @@ function choosePair(){const a=$('person-a').value,b=$('person-b').value;state.pa
 $('person-a').onchange=choosePair;$('person-b').onchange=choosePair;
 $('compare-toggle').onclick=()=>{closeTools();state.compare=!state.compare;state.pair=[];$('compare-toggle').setAttribute('aria-pressed',state.compare);$('comparison').hidden=!state.compare;renderTree();};
 $('chart-fit').onclick=()=>charts.reset();
-initStylePicker(id=>{state.chart=id;setView('tree');$('view-description').textContent=CHART_STYLES.find(s=>s.id===id).hint;});
+const stylePicker=initStylePicker(id=>{state.chart=id;setView('tree');$('view-description').textContent=CHART_STYLES.find(s=>s.id===id).hint;});
 renderPanel();renderYear();
 
 document.addEventListener('click',e=>{const details=$('relationship-result').querySelector('details');if(details&&!details.contains(e.target))details.open=false;});
@@ -96,7 +100,7 @@ function closeProfile(){$('profile-drawer').hidden=true;$('profile-open').setAtt
 $('profile-open').onclick=()=>{$('profile-drawer').hidden=false;$('profile-open').setAttribute('aria-expanded','true');$('profile-close').focus({preventScroll:true});};
 $('profile-close').onclick=closeProfile;
 $('tools-toggle').onclick=()=>{const open=$('explore-tools').hidden;closeTools();$('explore-tools').hidden=!open;$('tools-toggle').setAttribute('aria-expanded',open);$('search-tools').hidden=true;$('search-toggle').setAttribute('aria-expanded','false');};
-$('search-toggle').onclick=()=>{const open=$('search-tools').hidden;$('search-tools').hidden=!open;$('search-toggle').setAttribute('aria-expanded',open);closeTools();if(open)$('search').focus({preventScroll:true});};
+$('search-toggle').onclick=()=>{const open=$('search-tools').hidden;closeTools();$('search-tools').hidden=!open;$('search-toggle').setAttribute('aria-expanded',open);if(open)$('search').focus({preventScroll:true});};
 $('help-toggle').onclick=()=>{closeTools();$('explorer-help').hidden=false;$('help-close').focus({preventScroll:true});};$('help-close').onclick=()=>{$('explorer-help').hidden=true;$('tools-toggle').focus({preventScroll:true});};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('profile-drawer').hidden)closeProfile();closeTools();$('search-tools').hidden=true;$('search-toggle').setAttribute('aria-expanded','false');$('explorer-help').hidden=true;}});
 document.addEventListener('click',e=>{if(!e.target.closest('#explore-tools,#tools-toggle'))closeTools();});
@@ -105,7 +109,7 @@ $('compare-close').onclick=()=>{state.compare=false;state.pair=[];$('compare-tog
 
 
 
-const activeNavigation=()=>state.chart==='timeline'?timelineNavigation:charts.navigation;
+const activeNavigation=()=>state.chart==='timeline'&&!voiceDraft?timelineNavigation:charts.navigation;
 $('canvas-zoom-in').onclick=()=>activeNavigation().zoom(.8);
 $('canvas-zoom-out').onclick=()=>activeNavigation().zoom(1.25);
 $('canvas-fit').onclick=()=>activeNavigation().reset();
@@ -117,3 +121,8 @@ for(const event of ['pointerup','pointercancel'])$('profile-resize').addEventLis
 $('profile-resize').addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();$('profile-drawer').style.width=Math.max(320,Math.min(innerWidth-24,$('profile-drawer').getBoundingClientRect().width+(e.key==='ArrowLeft'?40:-40)))+'px';}});
 
 $('tree').addEventListener('keydown',e=>{if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)){e.preventDefault();if(e.key==='0')timelineNavigation.reset();else if(['+','=','-'].includes(e.key))timelineNavigation.zoom(e.key==='-'?1.25:.8);else{timelineBox={...timelineBox,x:timelineBox.x+(e.key==='ArrowLeft'?-30:e.key==='ArrowRight'?30:0),y:timelineBox.y+(e.key==='ArrowUp'?-30:e.key==='ArrowDown'?30:0)};paintTimelineViewport();}}});
+
+$('whole-family').onclick=()=>{closeProfile();state.branch='all';$('branch').value='all';state.query='';$('search').value='';stylePicker.choose('network');charts.navigation.reset();};
+document.addEventListener('voice-draft-change',e=>{const entering=!voiceDraft&&e.detail.active;if(!e.detail.active)lastDraftCount=0;voiceDraft=e.detail.active?e.detail:null;if(entering)stylePicker.choose('network');else if(voiceDraft)setView('tree');else setView(state.view);});
+
+$('canvas-fit').title='Zoom out to fit the current chart';$('whole-family').title='Leave a focused branch and show the complete family';
