@@ -2,7 +2,7 @@
 
 Read the current product charter and design system before changing the app. The user's latest instructions govern scope and override these defaults. Never infer private-data publication or message-sending permission from this file.
 
-## Four review roles
+## Five specialist roles
 
 Use these roles for substantive changes, with explicit bounded assignments. If subagents are available, dispatch the relevant roles independently; the coordinator integrates their findings. With one worker, perform the same reviews sequentially and label them role reviews, not separate agents. These files are reusable operating instructions, not installed services or autonomous scheduled jobs.
 
@@ -10,6 +10,9 @@ Use these roles for substantive changes, with explicit bounded assignments. If s
 2. **Design steward** — `docs/agents/02-design-steward.md`: interaction hierarchy, design components, mobile/desktop evidence and refinement.
 3. **AI / development** — `docs/agents/03-ai-engineer.md`: bounded implementation and grounded AI opportunities with evals.
 4. **Release / maintainability** — `docs/agents/04-release-engineer.md`: verification, packaging, provenance, drift, rollout and rollback.
+5. **Competitive researcher** — `docs/agents/05-competitive-researcher.md`: permitted competitor research, feature evidence, workflow/usage analysis and traceable candidate PRD additions.
+
+Route competitor discovery, feature comparisons and product-change scans to Agent 05 before Product/Design synthesis. Research feeds `docs/COMPETITIVE_RESEARCH.md` and candidate PRD entries; Product owns adoption and priority, Design owns interaction fit. A competitor feature is not a mandate to add another control.
 
 The coordinator owns shared app code and publication. Give workers distinct file ownership; no concurrent writes to the same file. Reviewers must not silently expand scope or claim approvals for one another. A reviewer disagreement is resolved against the user job and evidence, with the trade-off documented.
 

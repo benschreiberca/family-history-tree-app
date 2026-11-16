@@ -28,10 +28,11 @@ Voice extraction and chat require a user-supplied OpenRouter key. Browser speech
 
 ## Product and quality contracts
 
-- [Four-role team and how to run it](docs/AGENT_TEAM.md), with repository routing in [AGENTS.md](AGENTS.md).
+- [Five-role team and how to run it](docs/AGENT_TEAM.md), with repository routing in [AGENTS.md](AGENTS.md).
 - [Product charter](docs/PRODUCT_CHARTER.md), [PRD](docs/PRD.md) and [feature inventory](docs/FEATURE_INVENTORY.md).
 - [Design system](docs/DESIGN_SYSTEM.md) and [UX/UI evals](docs/DESIGN_EVALS.md): registered actions, token checks, browser tasks and anchored human judgment.
 - [Current design review](docs/reviews/2026-11-16-design-system.md) and [release contract](docs/RELEASE_CONTRACT.md).
+- [Competitive research agent](docs/agents/05-competitive-researcher.md) and [feature intelligence / candidate PRDs](docs/COMPETITIVE_RESEARCH.md).
 - [Architecture](docs/ARCHITECTURE.md), [local-first product direction](docs/LOCAL_FIRST_PRODUCT.md) and [AI opportunity map](docs/AI_OPPORTUNITY_MAP.md).
 - [Family-data evals](docs/EVALS.md), [chatbot boundaries](docs/CHATBOT_EVALS.md), [live voice](docs/LIVE_VOICE.md).
 - [Portable person profiles and source research](docs/PERSON_PROFILES.md), [profile schema](schemas/person-profile.schema.json) and [tier-two document/RAG plan](docs/DOCUMENT_RAG_PLAN.md).

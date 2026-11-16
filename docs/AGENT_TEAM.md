@@ -1,6 +1,6 @@
-# Four-role product team
+# Five-role product team
 
-The four roles were used to review this design-system change and are stored as reusable instructions. `AGENTS.md` routes future contributors through them. They are not four permanently running bots, and no schedule, hosted agent service or model-provider subscription was created.
+The original four roles reviewed the design-system change. A fifth role now owns competitor and feature intelligence. All five are reusable instructions. `AGENTS.md` routes future contributors through them. They are not permanently running bots, and no schedule, hosted agent service or model-provider subscription was created.
 
 | Role | Owns | Must return | Handoff |
 |---|---|---|---|
@@ -8,12 +8,13 @@ The four roles were used to review this design-system change and are stored as r
 | [Design steward](agents/02-design-steward.md) | Design system, state hierarchy, mobile/desktop refinement | Component placement, affected states, UX tasks and visual judgment with evidence | Engineering receives interaction contract; release receives review findings |
 | [AI engineering](agents/03-ai-engineer.md) | Implementation and AI opportunity proposals | Smallest viable approach, data flow, provenance, evals, cost/latency evidence and rollback | Product prioritizes; design embeds it in existing flows; release verifies |
 | [Release engineering](agents/04-release-engineer.md) | Checks, maintainability, packaging and release | Exact source/artifact identity, gate results, gaps and recovery route | Coordinator integrates and publishes within task authorization |
+| [Competitive research](agents/05-competitive-researcher.md) | Geni, Ancestry and adjacent product research; feature and workflow intelligence | Dated sources, evidence classes, usage limits, deduplicated opportunities and candidate PRD changes | Product selects priorities; Design checks simplification; AI/engineering assesses feasibility |
 
 ## Running the team on a change
 
-Ask your coding assistant: “Use the four roles in AGENTS.md to deliver [specific outcome]. Give each worker a distinct scope and integrate their reviews. Do not publish private family data.” The coordinator should load each role's file, pass the same change brief and assign file ownership. The agent runner and models are intentionally not hard-coded; the same roles can be used in different coding tools. Without a multi-agent runner, perform the roles in sequence with the same output contracts.
+Ask your coding assistant: “Use the relevant specialist roles in AGENTS.md to deliver [specific outcome]. Give each worker a distinct scope and integrate their reviews. Do not publish private family data.” The coordinator should load each role's file, pass the same change brief and assign file ownership. The agent runner and models are intentionally not hard-coded; the same roles can be used in different coding tools. Without a multi-agent runner, perform the roles in sequence with the same output contracts.
 
-Every change uses one shared brief: user job, problem evidence, priority, scope, non-goals, affected states, data flows, acceptance tasks and source baseline. A handoff includes exact files/revision, findings with severity, evidence, unknowns and next owner. Reviewers do not need four separate rewrites of the feature.
+Every change uses one shared brief: user job, problem evidence, priority, scope, non-goals, affected states, data flows, acceptance tasks and source baseline. A handoff includes exact files/revision, findings with severity, evidence, unknowns and next owner. Reviewers do not need separate rewrites of the feature.
 
 ## Enforcement layers
 
@@ -28,3 +29,9 @@ Every change uses one shared brief: user job, problem evidence, priority, scope,
 See `docs/reviews/2026-11-16-design-system.md`. The earlier app had accumulated competing control groups and contradictory historical documentation. Product and design agreed on a tree-first composition; AI engineering identified voice reliability and identity correction as higher-value next work than new AI buttons; release engineering found packaging and stale-evidence risks.
 
 Future “always improving” behavior means these roles run at the relevant change/release boundary. Running them repeatedly while nobody is changing the app would require an explicit scheduled workflow, budget and review policy. It must not silently create work, promote models or deploy itself.
+
+## Competitive discovery loop
+
+Invoke Agent 05 for competitor research, a launch/change scan, a new capability decision or a specific workflow question. It keeps [COMPETITIVE_RESEARCH.md](COMPETITIVE_RESEARCH.md) as the source-backed comparison and opportunity record. It may add clearly labelled candidate requirements with stable IDs and links to evidence; these do not silently become committed scope or implementation work.
+
+Each candidate states the user problem, documented/observed behavior, what is inferred about usage, fit with the charter, existing UX home, acceptance cases, data/eval consequences and an adapt/build/defer/reject recommendation. Product records disposition and rationale; accepted candidates move into the active PRD and inventory. No popularity, retention or conversion claim is inferred from a marketing page.

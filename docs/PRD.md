@@ -129,3 +129,10 @@ Release reports identify the reviewed revision, changed behavior, checks perform
 Delivery order follows PRODUCT_CHARTER.md: stabilize the design system and explorer/memory loop; establish real voice/correction/recovery evidence; deliver local persistence and complete portable backup/restore; add documents and reviewed source research; then consider private collaboration.
 
 First-release non-goals: public social network, AI-invented family history, unrestricted automated Geni scraping, public-by-default profiles, billing and native mobile distribution. Original code remains MIT-licensed; third-party assets and family data retain their own rights. Source availability does not license user content or guarantee a secure release.
+
+
+## Competitive discovery and candidate requirements
+
+Agent 05 owns permitted research of Geni, Ancestry and comparable products, with evidence and candidate mini-PRDs in [COMPETITIVE_RESEARCH.md](COMPETITIVE_RESEARCH.md). The role is defined in [05-competitive-researcher.md](agents/05-competitive-researcher.md).
+
+Candidates remain proposed, deferred or rejected until Product records adoption against the charter and Design validates the interaction home. A proposed addition includes dated source references, observed/documented/inferred labels, user job, expected value, dependencies, acceptance cases and data/AI evaluation consequences. Usage and popularity require their own evidence. Accepted candidates retain their evidence IDs in the active requirement; rejected ideas retain rationale to prevent rediscovery churn. Research does not itself authorize implementation, data import or deployment.

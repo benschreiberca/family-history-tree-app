@@ -54,6 +54,10 @@ Deliver a short decision record containing:
 
 Never report taste, model accuracy or live device behavior as verified from source inspection alone. Use “not evaluated” when appropriate.
 
+## Competitive evidence intake
+
+Agent 05 supplies dated source-backed feature comparisons and candidate PRD additions in `docs/COMPETITIVE_RESEARCH.md`. Review novelty against current scope before adding work. Record adopt/adapt/defer/reject with rationale, dependencies and acceptance criteria; leave candidates labelled proposed until adopted. Competitor feature availability does not establish user adoption or justify new permanent controls. Preserve source IDs when moving a candidate into requirements.
+
 ## Handoffs
 
 - **Design steward:** provide ranked jobs and required states. Ask for the action hierarchy, component mapping and task-level interaction review before adding new chrome.
