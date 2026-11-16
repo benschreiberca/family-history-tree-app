@@ -1,81 +1,34 @@
-# Immersive tree UX — product priority and interaction contract
+# Tree-first UX priorities
 
-2026-11-15. This decision supersedes the original PRD's permanent profile column, large heading, year controls and always-visible filters. Core value: make a trustworthy family tree easy to create, explore and understand. A feature's rank determines its screen prominence, not whether privacy or correctness is optional.
+Current contract · 2026-11-16. This replaces the accumulated historical layout notes. Detailed rules live in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md); [PRD.md](PRD.md) defines scope and [FEATURE_INVENTORY.md](FEATURE_INVENTORY.md) defines implementation status.
 
-## Ranked feature hierarchy
+Feature importance determines screen prominence, not whether truth, privacy or recovery are optional.
 
-| Rank | Capability | Importance to the product | Interface treatment |
-|---|---|---|---|
-| 1 | Explore people and their connections | The primary product object and payoff | Full-viewport tree; no permanent sidebar or dashboard cards |
-| 2 | Build and grow the family through voice or text | Primary creation workflow | One prominent Build with voice action; dedicated large-canvas workspace |
-| 3 | Find and focus a person | Navigate beyond the first screen | Compact Find person action; search field and results shown on request |
-| 4 | Inspect a person's life, events and evidence | Understand the person without losing tree context | Selected-person Life & sources chip; desktop side drawer / mobile bottom sheet |
-| 5 | Understand how two people connect | Explain relationship meaning | Explicit Compare mode under More; compact result only while active |
-| 6 | Choose a chart suited to the question | Different views of the same family | One chart control; ten-preview picker only when requested |
-| 7 | Review identity, conflicting claims and proposed changes | Protect family truth | Inline at the point of adding/editing; never a passive dashboard of alerts |
-| 8 | Research sources and attach discoveries | Expand evidence and timeline | Sources tab inside the requested profile |
-| 9 | Explore geography and migration | Supporting context | Earth within More; no permanent competing panel |
-| 10 | Recall stories, canonical bios and corrected spellings | Preserve family knowledge | Person context and creation/review flow; canonical regeneration and lexicon remain planned |
-| 11 | Collect documents and photographs | Future evidence library | Contextual drop/upload in profiles and archive workspace; tier two |
-| 12 | Ask natural-language questions | Optional shortcut to supported facts | Small Ask family entry, closed by default; no intrusive chat window |
-| 13 | Local storage, export, backup and private sync | Trust and ownership foundation | Setup / explicit data settings, not explorer chrome; encryption/sync still planned |
-| 14 | Model controls and evaluation results | Contributor/maintainer quality tools | Connection settings and developer documentation; not primary navigation |
-| 15 | Source code, PRD, inventory and help | Open-source discoverability | More menu and repository documentation |
+| Priority | User job | Interaction home |
+|---|---|---|
+| Core | Explore people and understand connections | Immersive tree, direct selection and pan/pinch; deterministic relationship graph |
+| Core | Create a trustworthy tree from memories | Add a memory dock in the tree; original words, live drafts and explicit review |
+| Core | Recover orientation | One contextual Whole family action for scope, or Fit view for a moved complete graph |
+| Supporting | Try the chart suited to a question | Ten visible, quiet text choices; horizontal scrolling and explicit keyboard activation |
+| Supporting | Understand a person's life and evidence | Life & sources on demand; full-height side panel, including narrow screens |
+| Supporting | Correct uncertain identity and relationships | At the review step, with quotes, ambiguous matches and explicit approval |
+| Supporting | Compare people, find a name, explore geography, ask a question | More; these tools do not accumulate permanent launchers |
+| Evidence expansion | Search archives and attach discoveries | Sources in the relevant profile; record searches, references and accepted changes |
+| Future foundation | Canonical bios, corrected-name library, durable drafts | Existing profile/review flow; not new explorer buttons |
+| Tier two | Documents, extraction, chunking and retrieval | Planned local document library and contextual profile ingestion |
+| Ownership | Export, restore, encrypted storage and private sync | Explicit data settings; planned encryption/sync must not be implied today |
+| Maintainer tools | Models, evals, project docs and diagnostics | Options, More and repository documentation |
 
-## Default view
+## State hierarchy
 
-The graph canvas spans the viewport. Floating controls occupy a narrow top strip, a small selected-person chip at the bottom and a quiet chat entry. The title block, persistent biography, large avatar, visible branch selector, legend, project link row and extra explanatory boxes are removed from the default view. The visual container leaves approximately 76 px above / 68 px below on desktop, and 102 px / 80 px on narrow screens, for controls and touch targets; the tree background covers the viewport. These are implementation spacings, not claims of measured user preference.
+Default explorer has the tree, chart choices, Add a memory, More and selected-person disclosure. No unsolicited profile/search/chat panel. Selection updates emphasis; disclosure opens the biography. Profile close restores focus without changing identity or data.
 
-The chart preference is retained. Focus timeline remains the initial view for a new browser; vertical page scrolling moves through generations. Alternate charts retain drag/pan/zoom and Fit view. The view should communicate relationships, not imitate a game with unrelated visual effects.
+A scoped branch offers Whole family. A complete graph with a moved camera offers Fit view. A fitted complete graph needs no duplicate recovery. Accessible explicit zoom controls remain in More alongside gestures and keyboard navigation.
 
-## Selection is not disclosure
+Memory idle offers Speak; recording offers Stop; stable proposals expose Review. Options holds setup, transcript/text alternative, diagnostics and sample. The fictional sample is labelled, unsavable and clearable. No idle row of disabled future steps.
 
-- Click/tap or Enter on a person: update selection, relative emphasis, selected-person chip and shared Earth selection. Do not automatically open details.
-- Activate Life & sources: open details for the selected person. Desktop uses a nonmodal side panel; narrow screens use a bottom sheet. The tree remains behind it.
-- Close or Escape: close details and restore keyboard focus to the invoking chip. Selected person and graph state remain.
-- Navigate a relative in an open panel: update that person's content and graph selection. The panel remains open by intent.
-- While editing/reading a profile, scroll the profile; do not advance the timeline behind it. Likewise suppress timeline-follow while search, chart picker or More is open.
+The chart strip remains visible and scrollable. Arrow keys move between choices without unexpectedly activating another chart; activation is explicit. Views preserve selected identity and make scope meaningful.
 
-## Progressive disclosure
+## Quality and limits
 
-Top toolbar: chart style, Build with voice, Find person and More. More contains Family/Earth, Compare, branch selection, help and project links. Search appears as a floating field with results, not a permanent column. The chart picker retains previews but disappears after selection. Comparison is transient and keeps its pair until explicitly changed. Existing chat opens only on request.
-
-Voice remains a separate full-width creation workspace, not a modal stacked over the explorer. The next voice iteration should make its transcript collapsible and review focus clearer; this explorer change does not claim real microphone reliability.
-
-## Interaction and accessibility checks
-
-- Default desktop has no profile drawer, search popover, comparison bar or style picker covering the graph.
-- Selecting a person updates the chip without opening the profile.
-- Profile open / close / Escape preserves selected person and restores focus.
-- Desktop profile scroll does not change tree selection; mobile sheet does not trap the user.
-- Chart switching preserves person selection; comparison mode stays available.
-- Find person can reach any displayed record and returns attention to the selection.
-- More and search expose expanded state; every icon-only close button is labelled.
-- Keyboard person selection, pan/zoom and reduced motion remain supported.
-- Test 390px phone, tablet and desktop viewports, long names and a dense tree before declaring mobile accessibility complete.
-
-## Status and limits
-
-Implemented: immersive explorer CSS/layout, compact toolbar, on-demand search/tools, profile drawer/sheet, Escape close and selected-person chip. Existing graph correctness suite remains separate from usability evidence. No formal usability study, full accessibility audit or large-family performance certification is implied. The product inventory remains the source for whether underlying features are implemented, partial or planned.
-
-## Navigation and profile update — 2026-11-15
-
-The biography now uses a full-height side panel on all screen sizes, replacing the earlier mobile bottom sheet. Desktop width starts at 440 px, can be resized from its left edge or expanded to 760 px; on narrow screens it uses nearly the available width. Timeline, Sources and Family tabs provide event details, provenance and clickable relatives, with recorded-place facts and current evidence counts. The panel remains closed until requested.
-
-The timeline and alternate charts now share pointer navigation: drag to pan even when starting over a person, pinch around the midpoint to zoom, then continue panning with the remaining finger. A stationary tap selects; finger drift is tolerated; cancellation and pinch never select someone. Network node repositioning is deliberately Alt-drag with a mouse so ordinary panning cannot rearrange people. Trackpad small wheel deltas pan; Ctrl-wheel / trackpad pinch and mouse-wheel zoom around the pointer. Timeline plain wheel retains chronological page navigation; touch drag pans the camera. Visible + / − / Fit tree controls recover from any zoom level. Keyboard navigation is supported.
-
-35 deterministic tests pass, including anchor math, pinch-to-pan continuity, tap/drag distinction and cancellation. Browser checks verified zoom → drag changes camera position and Fit recovery, plus expanded profile tabs. These do not substitute for physical-device multitouch testing.
-
-## Discovery and memory dock — 2026-11-16
-
-The visible tree navigation now separates **Whole family** (leave scoped ancestry/descendant views, clear branch/name filters, show the complete Constellation and reset camera) from **Fit view** (fit the current scope) and + / − zoom. This gives the user an explicit way out after tapping into a person's branch. Profile close remains separate: closing a biography must not imply changing the family selection.
-
-All ten charts are directly available in a persistent horizontally scrollable strip with previous/next controls, a selected state and a view count. On phones, swipe the strip or use the arrows. Name search moves to More as an optional utility; it is not the primary family-exploration mechanism. Normal exploration is tapping connections, switching views and opening Life & sources.
-
-Voice now uses **Add a memory** over the existing tree. A compact recording dock asks “Who comes to mind?”, shows the latest spoken words and processing status, and lets the tree grow in the same canvas. Approved people and draft people coexist, with dashed draft nodes. Tap a draft person to inspect their quoted memory. Text/model settings are on demand, not the initial interaction. Review is a separate nonmodal side panel; only explicitly approved new/existing identities and checked links enter saved data. This is an interaction redesign, not a new speech engine.
-
-Opening the dock initially uses Constellation so all current people remain visible; other chart styles can still be tried. Rooted views show only their relevant branch, and Focus timeline uses a network layout while the memory draft is active. Whole family always restores the complete graph. The displayed sample is fictional, uses no microphone/model requests and cannot be committed. Clear sample removes its transient nodes. Real voice still requires a connected model and consent; no automatic provider or cloud-processing promise has changed.
-
-Verification: 35 deterministic tests pass. Browser checks covered a focused/zoomed person → Whole family recovery, visible chart choices, sample growth to three people / two links, and draft-person memory. A separate mocked speech/provider run produced three draft people in the main canvas and opened the review panel after stopping. No physical phone, real microphone, live model or long-recording run was verified in this change.
-
-Mobile follow-up: the recording dock uses a single compact control row; transcript/options stay hidden. The camera frames newly appearing draft people instead of shrinking them into the complete overview. Whole family recovers the overview. A 390 × 844 CSS-pixel iframe layout was checked; no physical-phone claim is made.
+Use the task protocols and expert anchors in [DESIGN_EVALS.md](DESIGN_EVALS.md). Current evidence is recorded in [the design-system review](reviews/2026-11-16-design-system.md). Deterministic checks catch registered rule violations; they cannot establish taste or physical-device usability. Dense graph readability and real voice reliability still need dedicated work.

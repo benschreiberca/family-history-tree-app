@@ -1,67 +1,47 @@
-# Kin Atlas
+# Family History Tree App
 
-An open-source family tree explorer through time and place. **Interaction prototype — not production genealogy software.** All included people and stories are fictional.
+An open-source, tree-first family explorer. **Interaction prototype, not production genealogy software.** Included people and stories are fictional.
 
-[Open the hosted prototype](https://kin-atlas-prototype.online9787.chatgpt.site) (currently owner-private; run locally to explore independently).
+[Open the prototype](https://family-history-tree-app.online9787.chatgpt.site/) (owner-private). Run locally to explore independently.
 
-## Run
+## Run and check
 
-Requires Python 3 to serve files, or any static file server:
+Serve `dist` with Python 3 or any static server:
 
 ```sh
 python3 -m http.server 8080 --directory dist
 ```
 
-Open http://localhost:8080. No install, API keys or build step.
-
-Tests require Node 20 or later:
+Open http://localhost:8080. No install, key or build step is needed to explore. Tests require Node 20 or later:
 
 ```sh
-node --test tests/*.test.js
+npm run check
+python3 scripts/package-source.py
+npm run check:package
 ```
 
-## Try it
-Scroll vertically to move through generations. The focal person stays central and largest; close relatives appear larger than distant ones. Select a person to recenter and inspect relatives. Switch to Earth: the year and selected person carry over. Drag left or right to rotate along the equator, use zoom buttons, and switch between birthplaces and dated residences. Search and branch filters work across both views. All records are fictional. Land outlines are schematic.
+## Experience
 
-## Documentation
-- [AI evaluation specification](docs/EVALS.md): seven model-agnostic evals, small-model contract, continuous checks, scoring and 36 scenario specifications (not yet implemented).
-- [PRD](docs/PRD.md): scope, acceptance criteria and roadmap.
-- [Architecture](docs/ARCHITECTURE.md): implemented prototype and proposed MVP.
-- [Prototype plan](docs/PLAN.md): implementation and validation checklist.
-- [Contributing](CONTRIBUTING.md) and [security](SECURITY.md).
+The tree is the workspace. Try ten visible chart styles, select people, open Life & sources on demand, and use the contextual Whole family / Fit view action to recover. Search, compare, geography, zoom controls and grounded chat live in More. Add a memory opens a compact dock over the same tree; proposed people remain drafts until explicit review.
 
-## Status
-Implemented: timeline, family graph, detail panel, globe, search, branch filtering and keyboard controls.
-Implemented prototype additions: grounded family chat with a user-supplied OpenRouter key, model smoke evals, live voice draft extraction, explicit identity/link review, and browser-local saving. Live model and microphone performance are not yet verified. Planned: full editing, GEDCOM import, private accounts, server persistence, canonical biography reconciliation and tagged document uploads. No Geni integration or family-data migration has been performed.
+Voice extraction and chat require a user-supplied OpenRouter key. Browser speech recognition may use a cloud service. Reviewed additions and research use browser-local storage, which is not an encrypted vault or backup. The fictional sample makes no model or microphone request and cannot be saved.
 
-## License
-Original code is MIT licensed. The software license does not grant rights to any family's data. Public contributions must use fictional fixtures only.
+## Product and quality contracts
 
-To regenerate the downloadable source bundle and copied preview documentation, run `python3 scripts/package-source.py`.
+- [Four-role team and how to run it](docs/AGENT_TEAM.md), with repository routing in [AGENTS.md](AGENTS.md).
+- [Product charter](docs/PRODUCT_CHARTER.md), [PRD](docs/PRD.md) and [feature inventory](docs/FEATURE_INVENTORY.md).
+- [Design system](docs/DESIGN_SYSTEM.md) and [UX/UI evals](docs/DESIGN_EVALS.md): registered actions, token checks, browser tasks and anchored human judgment.
+- [Current design review](docs/reviews/2026-11-16-design-system.md) and [release contract](docs/RELEASE_CONTRACT.md).
+- [Architecture](docs/ARCHITECTURE.md), [local-first product direction](docs/LOCAL_FIRST_PRODUCT.md) and [AI opportunity map](docs/AI_OPPORTUNITY_MAP.md).
+- [Family-data evals](docs/EVALS.md), [chatbot boundaries](docs/CHATBOT_EVALS.md), [live voice](docs/LIVE_VOICE.md).
+- [Portable person profiles and source research](docs/PERSON_PROFILES.md), [profile schema](schemas/person-profile.schema.json) and [tier-two document/RAG plan](docs/DOCUMENT_RAG_PLAN.md).
 
+Forty deterministic/mock tests pass on the current candidate, alongside the scoped source design check. Narrow and desktop browser states were checked; physical-device gestures, real microphones, long recordings and live model quality remain unqualified. CI automates deterministic checks, not aesthetic approval.
 
-## Grounded AI and live voice
+## Status and contribution
 
-- [Chatbot accuracy boundaries, model candidates and evals](docs/CHATBOT_EVALS.md)
-- [Live voice draft workflow and evals](docs/LIVE_VOICE.md)
+Implemented prototype: ten charts, contextual camera recovery, on-demand biography with timeline/sources/family tabs, recorded archive searches and manually reviewed records, portable person JSON, grounded chat, incremental voice proposals and local saving. Archive search opens external pages; it does not automatically collect records. No Geni import or real-family migration is included.
 
-24 automated deterministic/mock tests pass. Model quality is unmeasured until live evals run with a user-supplied key. Never commit keys, real family transcripts, recordings or browser storage exports.
+Planned: canonical biography reconciliation, persistent corrected-name library, document ingestion/RAG, desktop installers, encrypted vaults, local AI and encrypted sync. See the inventory for gaps and priorities.
 
-### Profile timelines and source research
-
-Every profile now has Timeline / Sources tabs, logged archive search queries, candidate records with references, explicit review and portable JSON export. Accepted records appear as sourced timeline events; the original narrative and relationships are retained. This prototype opens external archive search pages and stores manually attached results locally; it does not retrieve archive results automatically.
-
-- [Profile format and source workflow](docs/PERSON_PROFILES.md)
-- [Versioned JSON Schema](schemas/person-profile.schema.json)
-- [Tier-two document storage, extraction, chunking and RAG plan](docs/DOCUMENT_RAG_PLAN.md)
-
-Validation: 27 automated tests pass, including source acceptance / withdrawal, conflicts, reference preservation and unsafe URL rejection.
-
-## Product status and local-first direction
-
-- [Complete feature inventory, statuses and next work](docs/FEATURE_INVENTORY.md)
-- [Downloadable desktop product, data handling, secure model tools and encrypted sync](docs/LOCAL_FIRST_PRODUCT.md)
-
-The prototype now includes ten visual chart styles and a full-width Build with voice workspace with inline review. Desktop installers, encrypted document storage, local AI and encrypted sync are **planned**, not available yet. 31 deterministic tests pass; live incremental voice was checked with simulated speech/provider responses, not real audio.
-
-Latest interaction update (2026-11-16): visible ten-chart strip, Whole family escape, optional name search under More, and Add a memory dock over the main tree with dashed proposals and on-demand transcript/review. The sample is fictional and makes no model call. 35 deterministic tests pass; actual voice quality remains unqualified.
+Original code is MIT licensed. That license grants no rights to family data. Contributions and public evidence must use fictional fixtures; never commit keys, recordings, transcripts or browser exports. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).

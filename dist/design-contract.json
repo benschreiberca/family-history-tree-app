@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "targetSizeCssPx": 44,
+  "surfaces": {
+    "explorer-toolbar": {
+      "actions": [
+        "create-memory",
+        "utilities"
+      ],
+      "primary": [
+        "create-memory"
+      ]
+    },
+    "chart-choice": {
+      "actions": [
+        "choose-chart"
+      ],
+      "primary": [],
+      "repeatedAction": "choose-chart"
+    },
+    "recovery": {
+      "actions": [
+        "recover-view"
+      ],
+      "primary": []
+    },
+    "memory-dock": {
+      "actions": [
+        "record-toggle",
+        "dismiss-memory",
+        "memory-options",
+        "review-draft"
+      ],
+      "primary": [
+        "record-toggle"
+      ]
+    },
+    "utilities": {
+      "actions": [
+        "search-people",
+        "compare-people",
+        "show-help",
+        "ask-family",
+        "zoom-out",
+        "zoom-in",
+        "view-tree",
+        "view-earth"
+      ],
+      "primary": []
+    }
+  },
+  "requiredTokens": [
+    "--ds-color-canvas",
+    "--ds-color-surface",
+    "--ds-color-text",
+    "--ds-color-muted",
+    "--ds-color-accent",
+    "--ds-action-size",
+    "--ds-radius-control",
+    "--ds-radius-panel",
+    "--ds-font-ui",
+    "--ds-font-small",
+    "--ds-motion-fast"
+  ],
+  "variants": [
+    "primary",
+    "quiet",
+    "tab"
+  ],
+  "forbiddenPersistentIds": [
+    "chat-launch",
+    "search-toggle",
+    "canvas-zoom-in",
+    "canvas-zoom-out",
+    "voice-sample"
+  ],
+  "notes": "These are approved action families for specific states/surfaces, not a universal button-count limit or a taste score. The 44px dimension is this product's UI target; graph-node hit geometry requires separate testing."
+}

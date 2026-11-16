@@ -4,7 +4,7 @@ Reviewed 2026-11-16. This is a prototype, not a production release. **Implemente
 
 ## UX priority update
 
-[UX_PRIORITIES.md](UX_PRIORITIES.md) ranks the complete product capability groups and defines the immersive interaction model. The default explorer now uses a full-viewport tree, floating compact toolbar, on-demand search/tools and profile side drawer (bottom sheet on narrow screens).
+[UX_PRIORITIES.md](UX_PRIORITIES.md) ranks the complete product capability groups and defines the immersive interaction model. The default explorer now uses a full-viewport tree, floating compact toolbar, on-demand search/tools and on-demand full-height profile side panel.
 
 ## Explore and visualize
 
@@ -20,7 +20,7 @@ Reviewed 2026-11-16. This is a prototype, not a production release. **Implemente
 | Lifespans | Implemented | Birth/death horizontal spans; unknown birth lane and open death stubs | Date ranges and uncertainty representation |
 | Relationship arcs | Implemented | Birth-ordered nodes and curved connections | Ordering options; spacing is ordinal, not a time scale |
 | Hourglass | Implemented | Ancestors above and descendants below selected person | Collapse distant branches |
-| Visual style picker | Implemented | Ten always-visible chart choices in swipeable strip, with previous/next; preferred style saved locally | Per-family layout preferences and saved camera positions |
+| Visual style picker | Implemented | Ten visible quiet text choices in a scrollable strip; keyboard focus and explicit activation; preferred style saved locally | Per-family layout preferences and saved camera positions |
 | Smooth transitions | Implemented | Animated node position changes, hover highlights, reduced-motion support | Edge interpolation and responsive label collisions |
 | Comparison | Implemented | Select two people, plain-English cousin/removal results and evidence path | Multiple common-ancestor paths; explicit adoptive/step/half relationships |
 | Comparison scroll | Implemented | Focus timeline continues scrolling while pair stays selected | Broader touch and keyboard regression tests |
@@ -89,7 +89,10 @@ Reviewed 2026-11-16. This is a prototype, not a production release. **Implemente
 
 ## Verification and priorities
 
-31 automated tests currently pass. New layout tests cover valid IDs/geometry, ancestral vs descendant scope, unknown dates and cycle handling. Browser checks exercised all nine alternate modes, and a **mocked** two-segment voice run grew from two people/one link to three people/two links while recording remained active. Inline review opened after stopping. These are integration checks, not evidence of real transcription accuracy or provider reliability. Actual microphone use, long recordings, cloud model quality, multi-device sync and encrypted vault security remain unverified or unimplemented.
+Current design-system candidate: 40 deterministic/mock tests and the scoped source design check pass. [Current review](reviews/2026-11-16-design-system.md) records browser evidence and limitations. Four reusable role contracts, source/rendered design checks and CI/package gates are implemented; human visual review and affected browser tasks remain required. This does not install continuously running agents or branch protection.
+
+
+Historical feature validation: 31 automated tests passed at the feature-expansion checkpoint. New layout tests cover valid IDs/geometry, ancestral vs descendant scope, unknown dates and cycle handling. Browser checks exercised all nine alternate modes, and a **mocked** two-segment voice run grew from two people/one link to three people/two links while recording remained active. Inline review opened after stopping. These are integration checks, not evidence of real transcription accuracy or provider reliability. Actual microphone use, long recordings, cloud model quality, multi-device sync and encrypted vault security remain unverified or unimplemented.
 
 Next releases:
 

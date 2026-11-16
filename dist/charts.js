@@ -9,7 +9,7 @@ export class FamilyCharts{
  }
  reset(){this.box={...this.home};this.viewport();}
  tapTarget(e){const direct=e.target.closest('[data-person]');if(direct)return direct;let best=null,distance=Infinity;for(const node of this.svg.querySelectorAll('[data-person]')){const r=node.getBoundingClientRect(),dx=Math.max(r.left-e.clientX,0,e.clientX-r.right),dy=Math.max(r.top-e.clientY,0,e.clientY-r.bottom),d=Math.hypot(dx,dy),pad=e.pointerType==='touch'?22:10;if(d<=pad&&d<distance){distance=d;best=node;}}return best;}
- viewport(){this.svg.setAttribute('viewBox',`${this.box.x} ${this.box.y} ${this.box.w} ${this.box.h}`);}
+ viewport(){this.svg.setAttribute('viewBox',`${this.box.x} ${this.box.y} ${this.box.w} ${this.box.h}`);document.dispatchEvent(new Event('tree-camera-change'));}
  zoom(f){this.navigation.zoom(f);}
  render(people,edges,mode,selected,path=[]){const previous=this.positions;const focused=this.svg.querySelector('[data-person]:focus')?.dataset.person;this.selected=selected;this.path=path;this.mode=mode;
  const key=JSON.stringify([mode,people.map(p=>[p.id,p.birth,p.death]),edges,ROOTED.has(mode)?selected:null]);
