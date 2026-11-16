@@ -37,3 +37,5 @@ All alternate views support pan, wheel zoom, keyboard arrows / + / - / 0, Fit vi
 Generation columns derive from parent edges, not recorded birth years. Rings count parent or partner steps. The fan uses unique ancestors by shortest depth, not repeated binary pedigree slots. Lifespans never extend an unknown death to today. Arc spacing is ordinal. Parent cycles withhold hierarchy rather than drawing misleading generations.
 
 Navigation update: ordinary drag pans in every chart, including over a person. Constellation node repositioning now requires Alt-drag with a mouse. Two-finger pinch zooms the chart; Ctrl-wheel is also supported. + / − / Fit tree are always reachable. Profile details use a resizable full-height side panel. See UX_PRIORITIES.md for the current contract.
+
+2026-11-16: chart choices now live in an always-visible horizontal strip with previous/next controls. Whole family switches to the complete Constellation and clears filters; Fit view resets only the current chart camera. Name search is under More. Memory mode shows dashed drafts in the main chart.
