@@ -1,6 +1,6 @@
 # Family History Tree App — feature inventory
 
-Reviewed 2026-11-15. This is a prototype, not a production release. **Implemented** means present in the current code; **Partial** means usable but with material gaps; **Planned** means not built. Validation is stated separately. No actual private family records are bundled in the public project.
+Reviewed 2026-11-16. This is a prototype, not a production release. **Implemented** means present in the current code; **Partial** means usable but with material gaps; **Planned** means not built. Validation is stated separately. No actual private family records are bundled in the public project.
 
 ## UX priority update
 
@@ -20,7 +20,7 @@ Reviewed 2026-11-15. This is a prototype, not a production release. **Implemente
 | Lifespans | Implemented | Birth/death horizontal spans; unknown birth lane and open death stubs | Date ranges and uncertainty representation |
 | Relationship arcs | Implemented | Birth-ordered nodes and curved connections | Ordering options; spacing is ordinal, not a time scale |
 | Hourglass | Implemented | Ancestors above and descendants below selected person | Collapse distant branches |
-| Visual style picker | Implemented | Ten thumbnail choices; preferred style saved locally | Per-family layout preferences and saved camera positions |
+| Visual style picker | Implemented | Ten always-visible chart choices in swipeable strip, with previous/next; preferred style saved locally | Per-family layout preferences and saved camera positions |
 | Smooth transitions | Implemented | Animated node position changes, hover highlights, reduced-motion support | Edge interpolation and responsive label collisions |
 | Comparison | Implemented | Select two people, plain-English cousin/removal results and evidence path | Multiple common-ancestor paths; explicit adoptive/step/half relationships |
 | Comparison scroll | Implemented | Focus timeline continues scrolling while pair stays selected | Broader touch and keyboard regression tests |
@@ -33,7 +33,7 @@ Reviewed 2026-11-15. This is a prototype, not a production release. **Implemente
 
 | Feature | Status | What exists / user value | Next implementation work |
 |---|---|---|---|
-| Build with voice workspace | Implemented | Full-width page, large live draft canvas, transcript sidebar, inline review; replaces modal | Real-user task testing; simplify AI setup further |
+| Build with voice workspace | Implemented | In-place Add a memory dock; drafts grow in main canvas; transcript/settings on demand; review side panel | Real-user task testing; simplify AI setup further |
 | Incremental voice tree | Partial | Final speech segments queue while recording continues; extraction updates graph between segments | Real microphones and 1/5/10-minute runs; queue lag and restart resilience |
 | Processing feedback | Implemented | Recording clock, listening/processing status, counts, per-segment activity and retry | Keep failed-state context across stop/start and disk recovery |
 | Live transcript | Partial | Browser speech recognition, interim text, editable after stop | Local ASR engine for private/offline desktop; speaker attribution |
