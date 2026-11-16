@@ -63,3 +63,5 @@ Validation: 27 automated tests pass, including source acceptance / withdrawal, c
 - [Downloadable desktop product, data handling, secure model tools and encrypted sync](docs/LOCAL_FIRST_PRODUCT.md)
 
 The prototype now includes ten visual chart styles and a full-width Build with voice workspace with inline review. Desktop installers, encrypted document storage, local AI and encrypted sync are **planned**, not available yet. 31 deterministic tests pass; live incremental voice was checked with simulated speech/provider responses, not real audio.
+
+Latest interaction update (2026-11-16): visible ten-chart strip, Whole family escape, optional name search under More, and Add a memory dock over the main tree with dashed proposals and on-demand transcript/review. The sample is fictional and makes no model call. 35 deterministic tests pass; actual voice quality remains unqualified.
