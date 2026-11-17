@@ -1,6 +1,6 @@
 # Family History Tree App — feature inventory
 
-Reviewed 2026-11-16. This is a prototype, not a production release. **Implemented** means present in the current code; **Partial** means usable but with material gaps; **Planned** means not built. Validation is stated separately. No actual private family records are bundled in the public project.
+Reviewed 2026-11-17. This is a prototype, not a production release. **Implemented** means present in the current code; **Partial** means usable but with material gaps; **Planned** means not built. Validation is stated separately. No actual private family records are bundled in the public project.
 
 ## UX priority update
 
@@ -89,17 +89,36 @@ Reviewed 2026-11-16. This is a prototype, not a production release. **Implemente
 
 ## Verification and priorities
 
-Current design-system candidate: 40 deterministic/mock tests and the scoped source design check pass. [Current review](reviews/2026-11-16-design-system.md) records browser evidence and limitations. Five reusable role contracts, source/rendered design checks and CI/package gates are implemented; human visual review and affected browser tasks remain required. Competitive research now feeds source-backed candidate PRDs through Product/Design review; no unattended competitor scraper or automatic feature rollout is installed. This does not install continuously running agents or branch protection.
+The 2026-11-16 design-system checkpoint recorded 40 passing deterministic/mock tests and the scoped source design check. Its [historical review](reviews/2026-11-16-design-system.md) records browser evidence and limitations. The [2026-11-17 journey PRD review](reviews/2026-11-17-journey-prd.md) records the current documentation candidate's gates separately. Five reusable role contracts, source/rendered design checks and CI/package gates are implemented; human visual review and affected browser tasks remain required. Competitive research now feeds source-backed candidate PRDs through Product/Design review; no unattended competitor scraper or automatic feature rollout is installed. This does not install continuously running agents or branch protection.
 
 
 Historical feature validation: 31 automated tests passed at the feature-expansion checkpoint. New layout tests cover valid IDs/geometry, ancestral vs descendant scope, unknown dates and cycle handling. Browser checks exercised all nine alternate modes, and a **mocked** two-segment voice run grew from two people/one link to three people/two links while recording remained active. Inline review opened after stopping. These are integration checks, not evidence of real transcription accuracy or provider reliability. Actual microphone use, long recordings, cloud model quality, multi-device sync and encrypted vault security remain unverified or unimplemented.
 
-Next releases:
+## Journey requirements adopted 2026-11-17
 
-1. **Voice usability alpha:** real 1/5/10-minute acceptance tests, bounded processing lag, autosaved drafts, identity splitting, corrections and no-loss retry.
-2. **Local desktop alpha:** vault, migration, complete export/restore, native key broker and local AI route. No account required.
-3. **Document alpha:** drop → store → extract → tag → review sourced claims; local search before embeddings.
-4. **Private collaboration beta:** encrypted sync and recovery, signed writer permissions, conflict UI and security review.
-5. **Public release:** signed packages, CI evidence, accessibility/mobile checks, documented supported platforms and known limitations.
+The Geni audit informed the expanded [PRD](PRD.md). Adoption means a requirement is approved for the stated delivery stage; it does not change implementation status. The PRD owns journey acceptance criteria and delivery order. [Research evidence](research/2026-11-16-geni-audit.md) distinguishes observations from inferred opportunities. No participant MaxDiff results exist; priorities are Product judgment.
+
+| Journey / capability | Current status | Adopted work still required |
+|---|---|---|
+| JY-01 Bring an existing tree | Planned | GEDCOM mapping, preview, uncertain dates and names, duplicate resolution, resumable import and verified recovery |
+| JY-02 Capture a recollection | Partial | Durable drafts, same-name splitting, scoped name variants, dated events/places and source-preserving review |
+| JY-03 Correct identities and facts | Partial | Complete manual editing, merge/split, typed relationships, exact change preview, immutable revision ledger and compensating restore |
+| JY-04 Preserve media and evidence | Planned | Original attachments, extraction jobs, independent person/event citations with page/region anchors and safe removal/retry |
+| JY-05 Pursue a research question | Partial | Research question/hypothesis/next action, linked evidence, resolve/reopen history and authorized discovery adapters; search logs/manual findings exist |
+| JY-06 Collaborate privately | Planned | Contributor proposals, permission enforcement, concurrency, revocation and recovery; hosted access alone does not supply these |
+| JY-07 Understand a sourced life | Partial | Maintained biography, family-context events, uncertainty-aware places, source-linked printing and aligned views; current profile and charts are interim |
+| Backup and interruption recovery | Planned / limited session exports | Complete archive/restore, checkpoints, attachments, stable IDs and explicit failure recovery; person JSON is insufficient |
+| CR-001 Explain the exact change | Partial | Existing voice identity review expands to independent claim decisions, old/new/evidence, conflicts and stale revision handling |
+| CR-002 Revision ledger and restore | Planned | Actor/time/field/evidence/reason history and append-only recovery; current review status is mutable |
+| CR-003 One original, many citations | Planned | Independent links to multiple people/events; rejecting one proposed fact must preserve the original and other citations |
+| CR-004 Explained consistency checks | Planned | Versioned deterministic rules, uncertainty-aware warnings, reasoned dismissals and reevaluation after relevant changes |
+| CR-005 One accepted claim across views | Partial | Profile/export currently project accepted documentary events; shared claim/event IDs must also drive charts/maps without stale base dates |
+| CR-006 Research question and next action | Planned | Private working theory remains distinct from accepted facts; compact contextual workflow within Sources |
+| Historical date precision and multilingual identity | Planned | Exact/partial/circa/before/after/range dates; script/language/name variants; unknown and conflicting values stay explicit |
+| Compact lists, family context and print | Planned | Accessible filtered list, contextual timeline/map and source-aware output; no automatic claim of current addresses or exact migration routes |
+| Calendar, aggregate statistics, media organization | Planned, optional later | Separate later requirements; not prerequisites for the core genealogy loop |
+| Public world tree/social feed, gifts, DNA, billing | Outside current scope | Audit accounted for these surfaces; no requirement to reproduce them in the current product |
+
+Release sequencing and gates are maintained in [PRD.md](PRD.md) and [PRODUCT_CHARTER.md](PRODUCT_CHARTER.md), rather than an independent roadmap here. Real voice/device evidence, complete archive recovery, verified data handling and accessibility remain release gates for the capabilities that depend on them.
 
 See [LOCAL_FIRST_PRODUCT.md](LOCAL_FIRST_PRODUCT.md) for architecture, privacy promises, tool boundaries and release gates.

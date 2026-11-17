@@ -2,7 +2,67 @@
 
 Owner: [Competitive research agent](agents/05-competitive-researcher.md). Product decisions: [Product lead](agents/01-product-scope.md).
 
-This register connects external evidence to candidate requirements. It is not a feature-parity roadmap. Keep the tree-first core loop and existing priorities; candidates require Product disposition before entering adopted scope.
+This register connects external evidence to requirements and retains their decision history. It is not a feature-parity roadmap. Keep the tree-first core loop and existing priorities; candidates require Product disposition before entering adopted scope.
+
+## Current disposition — 2026-11-17 journey PRD intake
+
+The user explicitly requested adding the researched journey features to the PRD using the project roles. Product has adopted **CR-001 through CR-006 as planned requirements**, with the mapping below. This is requirement adoption, **not implementation**, a deployment, evidence of user preference, or authorization to change Geni data. Existing implemented/partial/planned statuses remain separate in the feature inventory. The seven journey requirements are in [PRD.md](PRD.md); all thirty Geni evidence groups and complete inspected feature coverage are preserved in the [dated audit](research/2026-11-16-geni-audit.md).
+
+| Research requirement | Current decision / Product mapping | Journey / delivery dependency |
+|---|---|---|
+| CR-001 — evidence comparison and what changes | Adopted planned → VO-02, ED-01 | JY-02 voice and JY-03 correction; basic exact-reviewed-diff integrity is P0 |
+| CR-002 — recoverable profile/narrative history | Adopted planned → ED-02, BI-02, OW-01 | JY-03 correction and JY-07 life story; P1 history after revision/persistence contract |
+| CR-003 — reusable source with independent citations | Adopted planned → AR-01, AR-02 | JY-04 media/evidence; P2 document citations after durable originals and stable facts |
+| CR-004 — explained consistency review | Adopted planned → ED-03 | JY-03 correction; P1 basic checks, P2 advanced curator workflow |
+| CR-005 — accepted facts agree across views | Adopted planned → BI-03 | JY-01 import and JY-07 exploration/life story; P1 shared facts, foundational to other inputs |
+| CR-006 — private research questions/next actions | Adopted planned → SR-02 | JY-05 research; P2 research workflow, later integrations reuse it |
+
+Product owns these dispositions and phased priorities; Design owns placement and interaction acceptance. This register records the evidence/contract handoff and does not claim rendered Design validation. JY-01 existing-tree onboarding, JY-02 voice, JY-03 correction, JY-04 media, JY-05 research, JY-06 contribution and JY-07 life stories together cover the adopted journey scope. Supporting and later competitor capabilities have explicit PRD disposition rather than becoming unqualified first-release promises.
+
+### Current evidence and requirement extensions
+
+- **CR-001 / sources:** add G05, G09 and G10 to E-GENI-001/E-ANC-001. In existing Review/Sources, summarize new people, links, facts, conflicts and unchanged information; show current/proposed values and original evidence. Compute the summary deterministically from the actual diff. Accept, keep alternate, defer or reject separately. Summary and commit must agree exactly; unchecked links never commit; cancellation produces no canonical change; stale review cannot save; deferred context survives restart. Proposal, awaiting approval and accepted states remain distinct when collaborative permissions exist. No automated merge, separate Match Center dashboard or unnecessary single-user approval layer. Stable claims, source/person IDs, revisions and durable drafts are dependencies. Validate conflicting birth dates and same-name identities under UX-09/10 and UI-09.
+- **CR-002 / sources:** add G07. Contextual history includes actor, timestamp, affected field, source, reason and previous revision. Restore appends a revision and shows downstream effects; it does not erase earlier history or original recollections. A name/date correction can be reversed without losing citations; restoring prose invents no facts; history and source IDs survive full backup/restore. Transactional storage and accepted claims precede generated narrative. No social feed or silent rewrite. Validate a multi-step correction/restore task in the person panel and narrow/desktop history states.
+- **CR-003 / sources:** add G05/G11. Preserve one original with independently reviewed person/event citations and page/region locators. Rejecting one link preserves the others; opening a fact reveals its relevant evidence; originals and links/locators survive restore. Co-occurrence never creates a family relationship automatically. Document durability, access/deletion semantics and extraction provenance precede richer retrieval. Use existing Sources/document flow, not a new explorer control. Validate a passenger list with a family group and an unrelated person sharing a surname.
+
+### CR-004 — Explained consistency review
+
+- **Status / decision:** adopted planned; ED-03. **Recommendation:** adapt into existing person/review context, consolidated access under More only where needed.
+- **Sources / user:** G08/G10; a curator finding damaging inconsistencies without opening every profile. Existing EVALS specifies checks; runtime shape/cycle validation is not a complete persistent curator workflow.
+- **Behavior:** show impossible chronology, duplicate candidates and missing essential context with the affected facts, a reason, rule/version and explicit review state. Re-evaluate when underlying facts change.
+- **Acceptance:** unknown dates are not errors; approximate dates retain ranges; an issue exposes supporting facts; no autofix without a reviewed diff; dismissal records rationale/version; changed evidence invalidates stale decisions. Same first names or different surnames are possible patterns, not proof of an error.
+- **Non-goals / UI:** no fake confidence, universal tree-completeness percentage or automatic truth selection. Keep issues in Review/person context; UI-09 and UX-09/10 govern truthful decisions and recovery.
+- **Dependencies / data:** unified accepted claims, date precision, typed relationships, stable issue/fact IDs, revisions and deterministic hard-rule checks. Duplicate matching can abstain.
+- **AI / evals:** AI is unnecessary for hard chronology rules; suggestions remain candidates. Test explicit false positives and true positives, uncertain dates, changed evidence, stale review and absence of unapproved writes.
+- **Benefit hypothesis / next validation:** more real mistakes found with fewer misleading alarms. Observe a curator resolve the fictional issue set and preserve an intentional unusual family pattern. Product/Design review does not substitute for that task test.
+
+### CR-005 — Accepted facts agree across views
+
+- **Status / decision:** adopted planned; BI-03, connected to BI-01/ED-01. **Recommendation:** build the shared claim/event contract before further projections.
+- **Sources / user:** app `dist/profile-core.js` at audit baseline; G04/G06/G14 illustrate visible projections, not Geni's database. A family explorer must not see different accepted birth information in Timeline and the tree.
+- **Current gap:** accepted documentary events are appended by `profileExport()` while base person/chart/map fields remain separate. The app already has Timeline and Sources; this is a consistency gap, not their absence.
+- **Behavior / UI:** profile, timeline, lifespans, map and export consume the same accepted event/claim IDs. Review chooses accepted values while retaining conflicting alternatives and original evidence. No new top-level control or competing event store.
+- **Acceptance:** a reviewed correction updates every relevant projection; unresolved contradictions stay alternate; unknown precision stays unknown; undo restores all projections; unrelated records do not change. Exact/before/after/between/circa dates retain meaning and source wording; no invented midpoint or falsely exact age.
+- **Dependencies / data:** shared schema, stable IDs, source/citation links, precision semantics, migrations and revision transactions. Export/restore must preserve those semantics.
+- **AI / evals:** no model required for projections or commit. Test a corrected birth date, approximate migration and unresolved competing claims across all consumers; UX-02/06 and UI-07/09 apply to displayed history.
+- **Benefit hypothesis / next validation:** consistent interpretation of family knowledge. Execute one correction, undo and clean-instance restore and compare every projection to the accepted claim set.
+
+### CR-006 — Private research questions and next actions
+
+- **Status / decision:** adopted planned; SR-02. **Recommendation:** adapt a small Research notes area inside Sources.
+- **Sources / user:** G17 documentation and current `dist/profile.js`; a researcher resuming an unresolved question without promoting a theory to fact. Current Sources stores searches/findings but no question/hypothesis/next-action lifecycle.
+- **Behavior:** link a question to people, private hypotheses, search attempts, evidence and a next action. Support unresolved/resolved status, resume context, reopening and recoverable deletion; resolved answers link to their reviewed evidence. One search can inform several questions.
+- **Acceptance:** a hypothesis never enters accepted biography/tree facts without explicit review; unsuccessful searches remain useful evidence of attempts; closure records rationale and evidence; reopening preserves history; restored notes preserve person/source links and status. Deleting a question does not silently delete shared sources. A candidate citation alone does not prove identity.
+- **Non-goals / UI:** no general task dashboard, public project/forum system, automatic outreach or automated acceptance. Existing Sources/person flow hosts research context; apply UX-06 and UI-07/09.
+- **Dependencies / data:** stable question/person/source IDs, durable storage, revisions and restore. Later collaboration keeps note audience separate from profile permissions and respects source access.
+- **AI / evals:** optional next-question/query suggestions grounded in missing/conflicting evidence and labelled as suggestions. Deterministic storage is sufficient. Test that hypothetical wording cannot enter accepted facts or leak across note audiences.
+- **Benefit hypothesis / next validation:** fewer repeated searches and lost leads. Pause an ambiguous immigration question, restore elsewhere and resume with its failed search, competing theory and next action intact.
+
+### Intake quality and unresolved evidence
+
+G01–G30 retain observed/documented/partial/entry-point labels, original retrieval date and Basic/desktop context. G07 directly refreshes revision-log presence, but does not prove restoration. G10 refreshes visible field-conflict comparison and one approval explanation, but does not prove a successful correction or universal permission rule. G17 remains Pro documentation only. Earlier sources below remain historical evidence rather than being overwritten by these observations.
+
+CR-01–05/07/09/10: PASS for source traceability, evidence/context/usage honesty, deduplication, artifact hygiene, fixed freshness boundary and explicit planned adoption. CR-06/08: requirement-level homes, acceptance/dependencies/non-goals and Product handoff supplied; Design and implementation verification remain distinct. End-to-end Geni mutations, mobile/paid-plan tests, participant research and empirical MaxDiff: **NOT RUN**. No additional Geni access or new research was performed for this PRD intake.
 
 ## Initial evidence pass — 2026-11-16
 
@@ -30,7 +90,9 @@ These are concise original summaries, not copied documentation. No evidence supp
 
 These recommendations are this app's hypotheses. They do not assert that a competitor's design is better or that a feature will improve retention.
 
-## Candidate PRD entries
+## Historical candidate PRD snapshots — initial 2026-11-16 pass
+
+The following initial status statements preserve the pre-adoption record. The current 2026-11-17 disposition and extensions above supersede them; their evidence, acceptance cases and non-goals remain relevant.
 
 ### CR-001 — One evidence comparison step for proposed facts
 

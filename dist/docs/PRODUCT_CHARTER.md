@@ -1,6 +1,6 @@
 # Family History Tree App — current product charter
 
-Adopted direction: 2026-11-16. This charter consolidates the product intent after the user rejected the growing number of controls and inconsistent interaction design. It governs prioritization; it does not claim that planned capabilities exist. The feature inventory records implementation status.
+Adopted direction: 2026-11-16; journey requirements aligned 2026-11-17. This charter consolidates the product intent after the user rejected the growing number of controls and inconsistent interaction design. It governs prioritization; it does not claim that planned capabilities exist. The feature inventory records implementation status.
 
 ## Product promise
 
@@ -78,12 +78,15 @@ Do not use invented metrics to imply certainty. Establish performance, usability
 
 ## Delivery order
 
-1. Adopt and enforce the design system and task-level UX/UI evaluation contract.
-2. Refine the explorer and memory-to-review loop on mobile and desktop, including recovery from zoom/focus and interruption.
-3. Establish real voice, identity-correction and no-loss evidence before expanding the AI experience.
-4. Deliver local persistence, complete portable backup/restore and explicit data-handling modes.
-5. Add documents and source research through the same reviewed-claim workflow.
-6. Add private synchronization only with working recovery, conflict handling and verified access boundaries.
+The [PRD](PRD.md) adopts the audit-informed journey requirements and is the detailed delivery contract. Priority is Product judgment, not measured demand or completed MaxDiff research.
+
+1. **P0 — integrity and usable recovery.** Enforce the design system, readable explorer and memory review; stabilize identity, review boundaries and no-loss interruption behavior. Establish real voice/correction evidence before broader AI claims.
+2. **P1 — complete local genealogy foundation.** Deliver durable storage, typed relationships, uncertain dates and names, reviewed changes/history and a shared accepted-fact model. Complete portable backup/restore precedes committing imports. Add GEDCOM import, voice events/places, manual correction and compact lists through these foundations.
+3. **P2 — evidence and life history.** Add original documents, independent citations, extraction, research questions, sourced biographies, family-context timelines/maps and printing through the same reviewed-claim workflow.
+4. **P3 — optional connected workflows.** Add private contribution/sync and provider discovery only after recovery, concurrency, access boundaries and provider permissions are verified. Discovery remains proposals until reviewed.
+5. **P4 — optional conveniences.** Calendar, aggregate statistics and additional media organization follow core genealogy outcomes. Public world-tree/social features, gifts, DNA and billing remain outside current scope.
+
+Stages specify dependency order, not dates or a commitment to implement every feature together. Import, capture, correction, evidence, research, contribution and sourced-life journeys each require entry, interruption, recovery and completion criteria. Backup/recovery is a cross-journey release constraint, not a discretionary lower-ranked feature. Existing core exploration and accessibility work remains required throughout.
 
 ## Evidence required for a release claim
 
